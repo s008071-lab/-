@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>不動産生涯コスト比較シミュレーター</title>
+    <!-- Chosen Palette: Warm Neutral & Executive Teal/Navy (Slate background, Slate/Navy primary, Indigo, Teal, Amber accents) -->
+    <!-- Application Structure Plan:
+        1. Header & Summary Bar: Quick view of client age range and overall lifetime cost comparison highlights.
+        2. Control Panel (Inputs): Age settings, base parameters, and detailed tabbed parameter editors for all 3 plans.
+        3. Visual Dashboard (Charts): Cumulative lifetime cost line chart and cost breakdown stacked bar chart (Chart.js Canvas).
+        4. Detailed Comparison & Cash Flow Table: Year-by-year cashflow analysis and breakdown for deep-dive customer discussions.
+        5. Proposal Insights & Sales Talk: Key advantages/disadvantages and presentation points tailored for real estate advisors.
+        This design transitions raw financial variables into an engaging, visual sales conversation tool.
+    -->
+    <!-- Visualization & Content Choices:
+        - Lifetime Cumulative Cost: Line Chart (Chart.js Canvas) -> Shows cost crossover points across age.
+        - Cost Breakdown: Stacked Bar Chart (Chart.js Canvas) -> Compares Rent vs Mortgage vs Taxes vs Maintenance.
+        - Dynamic Inputs: HTML Sliders & Number Inputs linked to JS calculation engine.
+        - Structured HTML Tables: Responsive grid for yearly breakdown.
+        - NO SVG/Mermaid used; pure Canvas and Tailwind styled elements.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 380px;
+            max-height: 420px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 280px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans leading-relaxed min-h-screen">
+
+    <!-- Navigation Header -->
+    <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-3 mb-2 md:mb-0">
+                <span class="text-2xl font-bold tracking-tight text-teal-400">🏠 REAL ESTATE COST SIMULATOR</span>
+                <span class="bg-slate-800 text-slate-300 text-xs px-2.5 py-1 rounded-full border border-slate-700">営業提案用版</span>
+            </div>
+            <div class="text-xs text-slate-300 text-right">
+                3プラン比較分析：通常賃貸 / 譲渡型賃貸(30年) / 10年後購入
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- Executive Introduction -->
+        <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <h1 class="text-xl md:text-2xl font-bold text-slate-900 mb-2">不動産生涯コスト 3プラン徹底比較シミュレーション</h1>
+            <p class="text-slate-600 text-sm md:text-base">
+                本シミュレーターは、お客様のライフプラン（居住開始年齢〜終了年齢）に応じた「① 通常賃貸（5年毎引越）」「② 譲渡型賃貸（30年後に所有権移転）」「③ 10年間賃貸後に住宅ローン購入」の3つの選択肢の生涯トータルコストを比較検証するためのツールです。条件変更に伴うコスト分岐点をインタラクティブに可視化します。
+            </p>
+        </section>
+
+        <!-- Dynamic Control Panel (Inputs) -->
+        <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
+            <div class="border-b border-slate-200 pb-4 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <span>⚙️</span> シミュレーション前提条件の設定
+                </h2>
+                <button id="reset-btn" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 py-1.5 px-3 rounded-lg border border-slate-300 transition">
+                    初期値に戻す
+                </button>
+            </div>
+
+            <!-- Basic Global Inputs -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">開始年齢（住み替え開始）</label>
+                    <div class="flex items-center space-x-2">
+                        <input type="range" id="start-age-slider" min="20" max="60" value="35" class="w-full accent-teal-600">
+                        <span id="start-age-val" class="text-sm font-bold w-12 text-right">35歳</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">終了年齢（生涯算定期間）</label>
+                    <div class="flex items-center space-x-2">
+                        <input type="range" id="end-age-slider" min="65" max="100" value="85" class="w-full accent-teal-600">
+                        <span id="end-age-val" class="text-sm font-bold w-12 text-right">85歳</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">シミュレーション対象期間</label>
+                    <div class="text-sm font-bold text-slate-900 pt-1">
+                        <span id="total-years-val" class="text-teal-600 text-base">50</span> 年間
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">住宅ローン適用金利（年利）</label>
+                    <div class="flex items-center space-x-1">
+                        <input type="number" id="interest-rate" step="0.1" value="2.5" class="w-20 px-2 py-1 text-sm border border-slate-300 rounded focus:ring-teal-500 focus:border-teal-500">
+                        <span class="text-sm font-medium">% (固定)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabbed Plan Detailed Inputs -->
+            <div>
+                <div class="border-b border-slate-200">
+                    <nav class="flex space-x-4" aria-label="Tabs">
+                        <button class="plan-tab border-indigo-600 text-indigo-600 py-2 px-4 border-b-2 font-medium text-sm focus:outline-none" data-tab="plan1-inputs">
+                            ① 通常賃貸プラン設定
+                        </button>
+                        <button class="plan-tab border-transparent text-slate-500 hover:text-slate-700 py-2 px-4 border-b-2 font-medium text-sm focus:outline-none" data-tab="plan2-inputs">
+                            ② 譲渡型賃貸（30年）設定
+                        </button>
+                        <button class="plan-tab border-transparent text-slate-500 hover:text-slate-700 py-2 px-4 border-b-2 font-medium text-sm focus:outline-none" data-tab="plan3-inputs">
+                            ③ 10年賃貸後購入設定
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Plan 1 Tab Content -->
+                <div id="plan1-inputs" class="tab-content pt-4">
+                    <p class="text-xs text-slate-500 mb-4">※5年ごとに引越しを繰り返す設定です（礼金・仲介手数料・更新料・引越し代を含む）。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-xs text-slate-600">月額家賃 (万円)</label>
+                            <input type="number" id="p1-rent" value="12" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-600">新規契約初期費用 (月分/回)</label>
+                            <input type="number" id="p1-init-months" value="2" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm" placeholder="礼金・仲介手数料等">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-600">契約更新料 (月分/2年毎)</label>
+                            <input type="number" id="p1-renewal-months" value="1" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-600">解約費用 (万円/回)</label>
+                            <input type="number" id="p1-cancel-fee" value="5" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-600">引越し費用 (万円/5年毎)</label>
+                            <input type="number" id="p1-move-fee" value="15" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-600">火災・地震保険料等 (万円/年)</label>
+                            <input type="number" id="p1-ins" value="2" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plan 2 Tab Content -->
+                <div id="plan2-inputs" class="tab-content hidden pt-4">
+                    <p class="text-xs text-slate-500 mb-4">※30年間賃貸（修繕費はオーナー負担）。31年目より所有権移転（固定資産税・維持修繕費発生）。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-xs text-slate-600">譲渡型 月額賃料 (万円)</label>
+                            <input type="number" id="p2-rent" value="13.5" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-600">初回引越し代 (万円)</label>
+                            <input type="number" id="p2-init-move" value="20" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-600">賃貸時 保険・付帯費 (万円/年)</label>
+                            <input type="number" id="p2-ins-rent" value="2" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-600">譲渡後(31年目〜) 固定資産税 (万円/年)</label>
+                            <input type="number" id="p2-tax" value="10" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-600">譲渡後(31年目〜) 維持修繕費 (万円/年)</label>
+                            <input type="number" id="p2-maint" value="15" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-600">譲渡後 管理費・所有者保険 (万円/年)</label>
+                            <input type="number" id="p2-ins-owner" value="5" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plan 3 Tab Content -->
+                <div id="plan3-inputs" class="tab-content hidden pt-4">
+                    <p class="text-xs text-slate-500 mb-4">※最初の10年間は通常賃貸。11年目に頭金なし住宅ローンで購入。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-xs text-slate-600">1〜10年目 月額賃料 (万円)</label>
+                            <input type="number" id="p3-rent" value="12" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-600">購入物件価格 (万円)</label>
+                            <input type="number" id="p3-price" value="3500" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-600">ローン借入期間 (年)</label>
+                            <input type="number" id="p3-loan-years" value="35" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-600">購入時初期費用・諸経費 (万円)</label>
+                            <input type="number" id="p3-buy-fee" value="200" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-600">購入後 固定資産税 (万円/年)</label>
+                            <input type="number" id="p3-tax" value="12" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-600">購入後 外部修繕・維持費 (万円/年)</label>
+                            <input type="number" id="p3-maint" value="18" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-600">購入後 管理費・保険料等 (万円/年)</label>
+                            <input type="number" id="p3-ins-owner" value="6" class="w-full mt-1 p-2 border border-slate-300 rounded text-sm">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Dynamic Results Summary Cards -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Card 1 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-indigo-600 border-x border-b border-slate-200 flex flex-col justify-between">
+                <div>
+                    <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">プラン ①</span>
+                    <h3 class="text-lg font-bold text-slate-900 mt-1">通常賃貸プラン</h3>
+                    <p class="text-xs text-slate-500 mt-1">5年ごとに引越し・更新費用負担</p>
+                    <div class="mt-4">
+                        <span class="text-xs text-slate-500">生涯トータルコスト</span>
+                        <div class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-0.5">
+                            <span id="res-p1-total">0</span> <span class="text-sm font-normal">万円</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-600 space-y-1">
+                    <div class="flex justify-between"><span>月均等換算コスト:</span> <span id="res-p1-monthly" class="font-semibold">0 万円</span></div>
+                    <div class="flex justify-between"><span>資産残存価値:</span> <span class="font-semibold text-slate-400">0 万円 (資産なし)</span></div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-teal-600 border-x border-b border-slate-200 flex flex-col justify-between">
+                <div>
+                    <span class="text-xs font-bold text-teal-600 uppercase tracking-wider">プラン ②</span>
+                    <h3 class="text-lg font-bold text-slate-900 mt-1">譲渡型賃貸 (30年)</h3>
+                    <p class="text-xs text-slate-500 mt-1">30年後所有権移転・以降持家化</p>
+                    <div class="mt-4">
+                        <span class="text-xs text-slate-500">生涯トータルコスト</span>
+                        <div class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-0.5">
+                            <span id="res-p2-total">0</span> <span class="text-sm font-normal">万円</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-600 space-y-1">
+                    <div class="flex justify-between"><span>月均等換算コスト:</span> <span id="res-p2-monthly" class="font-semibold">0 万円</span></div>
+                    <div class="flex justify-between"><span>①通常賃貸との差額:</span> <span id="res-p2-diff" class="font-semibold text-teal-600">0 万円</span></div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-amber-600 border-x border-b border-slate-200 flex flex-col justify-between">
+                <div>
+                    <span class="text-xs font-bold text-amber-600 uppercase tracking-wider">プラン ③</span>
+                    <h3 class="text-lg font-bold text-slate-900 mt-1">10年賃貸後 住宅ローン購入</h3>
+                    <p class="text-xs text-slate-500 mt-1">10年賃貸後、11年目にローン購入</p>
+                    <div class="mt-4">
+                        <span class="text-xs text-slate-500">生涯トータルコスト</span>
+                        <div class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-0.5">
+                            <span id="res-p3-total">0</span> <span class="text-sm font-normal">万円</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-100 text-xs text-slate-600 space-y-1">
+                    <div class="flex justify-between"><span>月均等換算コスト:</span> <span id="res-p3-monthly" class="font-semibold">0 万円</span></div>
+                    <div class="flex justify-between"><span>①通常賃貸との差額:</span> <span id="res-p3-diff" class="font-semibold text-amber-600">0 万円</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visual Charts Section -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Chart 1: Lifetime Cumulative Trend -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-base font-bold text-slate-900 mb-1">📈 累積コスト推移（年齢連動グラフ）</h3>
+                    <p class="text-xs text-slate-500 mb-4">開始年齢から終了年齢までの累計支出額の推移。線が交差する点がコスト反転のポイントです。</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="cumulativeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 2: Cost Breakdown Comparison -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-base font-bold text-slate-900 mb-1">📊 費用内訳スタック比較</h3>
+                    <p class="text-xs text-slate-500 mb-4">家賃・ローン返済・税金・維持修繕費・引越し費用等の総支出内訳の比較です。</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="breakdownChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Strategic Sales Insights Section -->
+        <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <h3 class="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+                <span>💡</span> お客様提案用・シミュレーション分析サマリー
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+                <div class="p-4 bg-indigo-50 border border-indigo-100 rounded-lg">
+                    <h4 class="font-bold text-indigo-900 mb-1">通常賃貸の特徴</h4>
+                    <p class="text-indigo-800 text-xs leading-relaxed">
+                        資産として残らない一方、住宅ローン等の固定金利リスクを回避可能。5年毎の引越し費用や更新料が積もり重なるため、長期（30年以上）居住では生涯コストが最も高くなりやすい傾向があります。
+                    </p>
+                </div>
+                <div class="p-4 bg-teal-50 border border-teal-100 rounded-lg">
+                    <h4 class="font-bold text-teal-900 mb-1">譲渡型賃貸 (30年) の特徴</h4>
+                    <p class="text-teal-800 text-xs leading-relaxed">
+                        最初30年間は修繕負担がなく賃貸の手軽さを保持。30年後には無償譲渡されマイホーム化。住宅ローン審査に不安がある方や、修繕リスクを抑えつつ最終的に資産を手に入れたい層に優れています。
+                    </p>
+                </div>
+                <div class="p-4 bg-amber-50 border border-amber-100 rounded-lg">
+                    <h4 class="font-bold text-amber-900 mb-1">10年賃貸後 購入の特徴</h4>
+                    <p class="text-amber-800 text-xs leading-relaxed">
+                        序盤の自由度を持ちながら後半に資産形成。ただし賃貸期間の家賃は掛け捨てとなり、11年目からのローン金利（2.5%想定）や購入後の固定資産税・大規模修繕費が後半集中します。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Cashflow Table -->
+        <section class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900">📑 年別キャッシュフロー比較明細</h3>
+                    <p class="text-xs text-slate-500">年齢ごとの各プラン年間費用および累積支出推移の一覧データです。</p>
+                </div>
+                <button id="toggle-table-btn" class="text-xs bg-slate-800 text-white px-3 py-1.5 rounded hover:bg-slate-700 transition">
+                    明細表を開く / 閉じる
+                </button>
+            </div>
+
+            <div id="table-container" class="overflow-x-auto max-h-96 border border-slate-200 rounded-lg">
+                <table class="w-full text-xs text-left text-slate-600">
+                    <thead class="text-xs text-slate-700 uppercase bg-slate-100 sticky top-0 border-b border-slate-200">
+                        <tr>
+                            <th scope="col" class="px-3 py-2 text-center">経過年</th>
+                            <th scope="col" class="px-3 py-2 text-center">年齢</th>
+                            <th scope="col" class="px-3 py-2 text-right bg-indigo-50/50">①通常 年間</th>
+                            <th scope="col" class="px-3 py-2 text-right bg-indigo-50/50">①通常 累計</th>
+                            <th scope="col" class="px-3 py-2 text-right bg-teal-50/50">②譲渡 年間</th>
+                            <th scope="col" class="px-3 py-2 text-right bg-teal-50/50">②譲渡 累計</th>
+                            <th scope="col" class="px-3 py-2 text-right bg-amber-50/50">③購入 年間</th>
+                            <th scope="col" class="px-3 py-2 text-right bg-amber-50/50">③購入 累計</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cashflow-tbody" class="divide-y divide-slate-200">
+                        <!-- JS populated -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 mt-12 text-center text-xs">
+        <div class="max-w-7xl mx-auto px-4">
+            不動産比較シミュレーションシステム &copy; 2026 | 本ツールは試算用であり、実際の各種契約条件・税額・金利変動により数値は前後します。
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Chart objects
+        let cumulativeChart = null;
+        let breakdownChart = null;
+
+        // Domestic PMT calculation function (Standard Financial Formula)
+        function calculatePMT(ratePerYear, nperYears, pv) {
+            if (ratePerYear === 0) return pv / (nperYears * 12);
+            const r = ratePerYear / 12;
+            const n = nperYears * 12;
+            return pv * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+        }
+
+        // Label Wrapping logic (Requirement: 16-char max)
+        function formatLabel(str) {
+            if (str.length <= 16) return str;
+            return str.match(/.{1,16}/g) || [str];
+        }
+
+        // Document DOM Elements
+        const startAgeSlider = document.getElementById('start-age-slider');
+        const endAgeSlider = document.getElementById('end-age-slider');
+        const startAgeVal = document.getElementById('start-age-val');
+        const endAgeVal = document.getElementById('end-age-val');
+        const totalYearsVal = document.getElementById('total-years-val');
+
+        // Tab Switching Logic
+        document.querySelectorAll('.plan-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                document.querySelectorAll('.plan-tab').forEach(t => {
+                    t.classList.remove('border-indigo-600', 'text-indigo-600');
+                    t.classList.add('border-transparent', 'text-slate-500');
+                });
+                e.target.classList.remove('border-transparent', 'text-slate-500');
+                e.target.classList.add('border-indigo-600', 'text-indigo-600');
+
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+                document.getElementById(e.target.dataset.tab).classList.remove('hidden');
+            });
+        });
+
+        // Event Listeners for Dynamic Calculation
+        const allInputs = document.querySelectorAll('input');
+        allInputs.forEach(input => {
+            input.addEventListener('input', runSimulation);
+        });
+
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            // Reset to default values
+            startAgeSlider.value = 35;
+            endAgeSlider.value = 85;
+            document.getElementById('interest-rate').value = 2.5;
+
+            document.getElementById('p1-rent').value = 12;
+            document.getElementById('p1-init-months').value = 2;
+            document.getElementById('p1-renewal-months').value = 1;
+            document.getElementById('p1-cancel-fee').value = 5;
+            document.getElementById('p1-move-fee').value = 15;
+            document.getElementById('p1-ins').value = 2;
+
+            document.getElementById('p2-rent').value = 13.5;
+            document.getElementById('p2-init-move').value = 20;
+            document.getElementById('p2-ins-rent').value = 2;
+            document.getElementById('p2-tax').value = 10;
+            document.getElementById('p2-maint').value = 15;
+            document.getElementById('p2-ins-owner').value = 5;
+
+            document.getElementById('p3-rent').value = 12;
+            document.getElementById('p3-price').value = 3500;
+            document.getElementById('p3-loan-years').value = 35;
+            document.getElementById('p3-buy-fee').value = 200;
+            document.getElementById('p3-tax').value = 12;
+            document.getElementById('p3-maint').value = 18;
+            document.getElementById('p3-ins-owner').value = 6;
+
+            runSimulation();
+        });
+
+        document.getElementById('toggle-table-btn').addEventListener('click', () => {
+            const container = document.getElementById('table-container');
+            container.classList.toggle('hidden');
+        });
+
+        // Core Calculation Engine
+        function runSimulation() {
+            // Age parameters
+            let startAge = parseInt(startAgeSlider.value);
+            let endAge = parseInt(endAgeSlider.value);
+            if (endAge <= startAge) {
+                endAge = startAge + 1;
+                endAgeSlider.value = endAge;
+            }
+            startAgeVal.textContent = startAge + '歳';
+            endAgeVal.textContent = endAge + '歳';
+            const totalYears = endAge - startAge;
+            totalYearsVal.textContent = totalYears;
+
+            const rate = parseFloat(document.getElementById('interest-rate').value) / 100;
+
+            // Plan 1 Inputs
+            const p1Rent = parseFloat(document.getElementById('p1-rent').value) || 0;
+            const p1InitMonths = parseFloat(document.getElementById('p1-init-months').value) || 0;
+            const p1RenewalMonths = parseFloat(document.getElementById('p1-renewal-months').value) || 0;
+            const p1CancelFee = parseFloat(document.getElementById('p1-cancel-fee').value) || 0;
+            const p1MoveFee = parseFloat(document.getElementById('p1-move-fee').value) || 0;
+            const p1Ins = parseFloat(document.getElementById('p1-ins').value) || 0;
+
+            // Plan 2 Inputs
+            const p2Rent = parseFloat(document.getElementById('p2-rent').value) || 0;
+            const p2InitMove = parseFloat(document.getElementById('p2-init-move').value) || 0;
+            const p2InsRent = parseFloat(document.getElementById('p2-ins-rent').value) || 0;
+            const p2Tax = parseFloat(document.getElementById('p2-tax').value) || 0;
+            const p2Maint = parseFloat(document.getElementById('p2-maint').value) || 0;
+            const p2InsOwner = parseFloat(document.getElementById('p2-ins-owner').value) || 0;
+
+            // Plan 3 Inputs
+            const p3Rent = parseFloat(document.getElementById('p3-rent').value) || 0;
+            const p3Price = parseFloat(document.getElementById('p3-price').value) || 0;
+            const p3LoanYears = parseFloat(document.getElementById('p3-loan-years').value) || 0;
+            const p3BuyFee = parseFloat(document.getElementById('p3-buy-fee').value) || 0;
+            const p3Tax = parseFloat(document.getElementById('p3-tax').value) || 0;
+            const p3Maint = parseFloat(document.getElementById('p3-maint').value) || 0;
+            const p3InsOwner = parseFloat(document.getElementById('p3-ins-owner').value) || 0;
+
+            // Compute monthly loan payment for Plan 3 (Year 11+)
+            const p3MonthlyLoan = calculatePMT(rate, p3LoanYears, p3Price * 10000) / 10000;
+            const p3YearlyLoan = p3MonthlyLoan * 12;
+
+            // Data storage per year
+            const labelsAge = [];
+            const p1Cumulative = [];
+            const p2Cumulative = [];
+            const p3Cumulative = [];
+
+            const p1Yearly = [];
+            const p2Yearly = [];
+            const p3Yearly = [];
+
+            // Cost breakdowns
+            let p1Breakdown = { rent: 0, move: 0, ins: 0 };
+            let p2Breakdown = { rent: 0, move: 0, tax: 0, maint: 0, ins: 0 };
+            let p3Breakdown = { rent: 0, move: 0, mortgage: 0, buyFee: 0, tax: 0, maint: 0, ins: 0 };
+
+            let p1Sum = 0;
+            let p2Sum = 0;
+            let p3Sum = 0;
+
+            for (let y = 1; y <= totalYears; y++) {
+                const age = startAge + y - 1;
+                labelsAge.push(age + '歳');
+
+                // --- PLAN 1 CALCULATION ---
+                let p1Cost = p1Rent * 12 + p1Ins;
+                p1Breakdown.rent += p1Rent * 12;
+                p1Breakdown.ins += p1Ins;
+
+                // Move cycle every 5 years
+                if (y % 5 === 0) {
+                    const moveCost = (p1Rent * p1InitMonths) + p1CancelFee + p1MoveFee;
+                    p1Cost += moveCost;
+                    p1Breakdown.move += moveCost;
+                } else if (y % 2 === 1 && y !== 1) {
+                    // Renewal fee every 2 years (odd years except year 1)
+                    const renewal = p1Rent * p1RenewalMonths;
+                    p1Cost += renewal;
+                    p1Breakdown.move += renewal;
+                }
+                p1Sum += p1Cost;
+                p1Yearly.push(p1Cost);
+                p1Cumulative.push(p1Sum);
+
+                // --- PLAN 2 CALCULATION ---
+                let p2Cost = 0;
+                if (y <= 30) {
+                    p2Cost = p2Rent * 12 + p2InsRent;
+                    p2Breakdown.rent += p2Rent * 12;
+                    p2Breakdown.ins += p2InsRent;
+                    if (y === 1) {
+                        p2Cost += p2InitMove;
+                        p2Breakdown.move += p2InitMove;
+                    }
+                } else {
+                    p2Cost = p2Tax + p2Maint + p2InsOwner;
+                    p2Breakdown.tax += p2Tax;
+                    p2Breakdown.maint += p2Maint;
+                    p2Breakdown.ins += p2InsOwner;
+                }
+                p2Sum += p2Cost;
+                p2Yearly.push(p2Cost);
+                p2Cumulative.push(p2Sum);
+
+                // --- PLAN 3 CALCULATION ---
+                let p3Cost = 0;
+                if (y <= 10) {
+                    // Normal rental first 10 years
+                    p3Cost = p3Rent * 12 + p1Ins;
+                    p3Breakdown.rent += p3Rent * 12;
+                    p3Breakdown.ins += p1Ins;
+
+                    if (y % 5 === 0) {
+                        const moveCost = (p3Rent * p1InitMonths) + p1CancelFee + p1MoveFee;
+                        p3Cost += moveCost;
+                        p3Breakdown.move += moveCost;
+                    } else if (y % 2 === 1 && y !== 1) {
+                        const renewal = p3Rent * p1RenewalMonths;
+                        p3Cost += renewal;
+                        p3Breakdown.move += renewal;
+                    }
+                } else {
+                    // Purchase at Year 11
+                    if (y === 11) {
+                        p3Cost += p3BuyFee;
+                        p3Breakdown.buyFee += p3BuyFee;
+                    }
+
+                    const loanPaidYears = y - 10;
+                    if (loanPaidYears <= p3LoanYears) {
+                        p3Cost += p3YearlyLoan;
+                        p3Breakdown.mortgage += p3YearlyLoan;
+                    }
+                    p3Cost += p3Tax + p3Maint + p3InsOwner;
+                    p3Breakdown.tax += p3Tax;
+                    p3Breakdown.maint += p3Maint;
+                    p3Breakdown.ins += p3InsOwner;
+                }
+                p3Sum += p3Cost;
+                p3Yearly.push(p3Cost);
+                p3Cumulative.push(p3Sum);
+            }
+
+            // Update Metric Summary Cards
+            document.getElementById('res-p1-total').textContent = Math.round(p1Sum).toLocaleString();
+            document.getElementById('res-p1-monthly').textContent = (p1Sum / (totalYears * 12)).toFixed(1) + ' 万円';
+
+            document.getElementById('res-p2-total').textContent = Math.round(p2Sum).toLocaleString();
+            document.getElementById('res-p2-monthly').textContent = (p2Sum / (totalYears * 12)).toFixed(1) + ' 万円';
+            const diff2 = Math.round(p2Sum - p1Sum);
+            document.getElementById('res-p2-diff').textContent = (diff2 > 0 ? '+' : '') + diff2.toLocaleString() + ' 万円';
+
+            document.getElementById('res-p3-total').textContent = Math.round(p3Sum).toLocaleString();
+            document.getElementById('res-p3-monthly').textContent = (p3Sum / (totalYears * 12)).toFixed(1) + ' 万円';
+            const diff3 = Math.round(p3Sum - p1Sum);
+            document.getElementById('res-p3-diff').textContent = (diff3 > 0 ? '+' : '') + diff3.toLocaleString() + ' 万円';
+
+            // Populate Cash Flow Table
+            const tbody = document.getElementById('cashflow-tbody');
+            tbody.innerHTML = '';
+            for (let i = 0; i < totalYears; i++) {
+                const tr = document.createElement('tr');
+                tr.className = i % 2 === 0 ? 'bg-white' : 'bg-slate-50';
+                tr.innerHTML = `
+                    <td class="px-3 py-1.5 text-center font-medium">${i + 1}年目</td>
+                    <td class="px-3 py-1.5 text-center">${labelsAge[i]}</td>
+                    <td class="px-3 py-1.5 text-right font-mono bg-indigo-50/30">${Math.round(p1Yearly[i]).toLocaleString()}万</td>
+                    <td class="px-3 py-1.5 text-right font-mono font-bold bg-indigo-50/30">${Math.round(p1Cumulative[i]).toLocaleString()}万</td>
+                    <td class="px-3 py-1.5 text-right font-mono bg-teal-50/30">${Math.round(p2Yearly[i]).toLocaleString()}万</td>
+                    <td class="px-3 py-1.5 text-right font-mono font-bold bg-teal-50/30">${Math.round(p2Cumulative[i]).toLocaleString()}万</td>
+                    <td class="px-3 py-1.5 text-right font-mono bg-amber-50/30">${Math.round(p3Yearly[i]).toLocaleString()}万</td>
+                    <td class="px-3 py-1.5 text-right font-mono font-bold bg-amber-50/30">${Math.round(p3Cumulative[i]).toLocaleString()}万</td>
+                `;
+                tbody.appendChild(tr);
+            }
+
+            // Render/Update Charts
+            renderCharts(labelsAge, p1Cumulative, p2Cumulative, p3Cumulative, p1Breakdown, p2Breakdown, p3Breakdown);
+        }
+
+        function renderCharts(labels, p1Cum, p2Cum, p3Cum, b1, b2, b3) {
+            // Chart 1: Cumulative Trend Line Chart
+            const ctx1 = document.getElementById('cumulativeChart').getContext('2d');
+            if (cumulativeChart) cumulativeChart.destroy();
+
+            cumulativeChart = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: formatLabel('① 通常賃貸プラン'),
+                            data: p1Cum,
+                            borderColor: '#4338CA',
+                            backgroundColor: 'rgba(67, 56, 202, 0.05)',
+                            borderWidth: 3,
+                            pointRadius: 0,
+                            pointHoverRadius: 6,
+                            fill: false,
+                            tension: 0.1
+                        },
+                        {
+                            label: formatLabel('② 譲渡型賃貸(30年)'),
+                            data: p2Cum,
+                            borderColor: '#0D9488',
+                            backgroundColor: 'rgba(13, 148, 136, 0.05)',
+                            borderWidth: 3,
+                            pointRadius: 0,
+                            pointHoverRadius: 6,
+                            fill: false,
+                            tension: 0.1
+                        },
+                        {
+                            label: formatLabel('③ 10年賃貸後購入'),
+                            data: p3Cum,
+                            borderColor: '#D97706',
+                            backgroundColor: 'rgba(217, 119, 6, 0.05)',
+                            borderWidth: 3,
+                            pointRadius: 0,
+                            pointHoverRadius: 6,
+                            fill: false,
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + Math.round(context.raw).toLocaleString() + ' 万円';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: {
+                            ticks: {
+                                callback: function(val) { return val.toLocaleString() + '万'; }
+                            },
+                            title: { display: true, text: '累計費用 (万円)', font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Cost Breakdown Stacked Bar Chart
+            const ctx2 = document.getElementById('breakdownChart').getContext('2d');
+            if (breakdownChart) breakdownChart.destroy();
+
+            breakdownChart = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['① 通常賃貸', '② 譲渡型賃貸', '③ 10年後購入'],
+                    datasets: [
+                        {
+                            label: '家賃総額',
+                            data: [Math.round(b1.rent), Math.round(b2.rent), Math.round(b3.rent)],
+                            backgroundColor: '#6366F1'
+                        },
+                        {
+                            label: '住宅ローン元利金',
+                            data: [0, 0, Math.round(b3.mortgage)],
+                            backgroundColor: '#F59E0B'
+                        },
+                        {
+                            label: '引越・更新・購入諸経費',
+                            data: [Math.round(b1.move), Math.round(b2.move), Math.round(b3.move + b3.buyFee)],
+                            backgroundColor: '#EC4899'
+                        },
+                        {
+                            label: '固定資産税',
+                            data: [0, Math.round(b2.tax), Math.round(b3.tax)],
+                            backgroundColor: '#10B981'
+                        },
+                        {
+                            label: '維持修繕費',
+                            data: [0, Math.round(b2.maint), Math.round(b3.maint)],
+                            backgroundColor: '#14B8A6'
+                        },
+                        {
+                            label: '保険・管理費用',
+                            data: [Math.round(b1.ins), Math.round(b2.ins), Math.round(b3.ins)],
+                            backgroundColor: '#94A3B8'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + Math.round(context.raw).toLocaleString() + ' 万円';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { stacked: true },
+                        y: {
+                            stacked: true,
+                            ticks: {
+                                callback: function(val) { return val.toLocaleString() + '万'; }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Run simulation on page load
+        window.addEventListener('DOMContentLoaded', runSimulation);
+    </script>
+</body>
+</html>
