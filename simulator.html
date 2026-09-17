@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>不動産生涯コスト比較シミュレーター</title>
+    <title>生涯コスト比較シミュレーター｜株式会社Ideal properties</title>
+    <meta name="description" content="通常賃貸・譲渡型賃貸・10年後に住宅ローン購入。3つのプランの生涯トータルコストを、ご自身の条件で比較できるシミュレーターです。">
     <!-- Chosen Palette: Warm Neutral & Executive Teal/Navy (Slate background, Slate/Navy primary, Indigo, Teal, Amber accents) -->
     <!-- Application Structure Plan:
         1. Header & Summary Bar: Quick view of client age range and overall lifetime cost comparison highlights.
@@ -41,6 +42,20 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans leading-relaxed min-h-screen">
+<!-- Ideal properties サイト共通ナビゲーション -->
+<div style="position:sticky;top:0;z-index:999;background:#050C08;border-bottom:1px solid rgba(234,243,237,.14)">
+  <div style="max-width:1240px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+      <svg width="26" height="26" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 2.5 36.5 13v14L20 37.5 3.5 27V13L20 2.5Z" stroke="#00E15E" stroke-width="2.2" stroke-linejoin="round"/><path d="M13 25.5V17l7-4.4 7 4.4v8.5" stroke="#00E15E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span style="color:#EAF3ED;font-family:Archivo,Helvetica,Arial,sans-serif;font-weight:800;font-size:15px;letter-spacing:-.01em">Ideal properties</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <a href="index.html" style="color:#9CB3A5;font-size:13px;text-decoration:none;padding:8px 4px">&larr; サイトトップへ戻る</a>
+      <a href="about.html" style="color:#9CB3A5;font-size:13px;text-decoration:none;padding:8px 4px">譲渡型賃貸とは</a>
+      <a href="https://line.me/R/ti/p/@441smfiq" target="_blank" rel="noopener" style="background:#06C755;color:#fff;font-size:13px;font-weight:700;text-decoration:none;padding:9px 18px;border-radius:999px">LINEで無料相談</a>
+    </div>
+  </div>
+</div>
 
     <!-- Navigation Header -->
     <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
@@ -787,5 +802,11 @@
         // Run simulation on page load
         window.addEventListener('DOMContentLoaded', runSimulation);
     </script>
+<div style="background:#050C08;padding:40px 20px;text-align:center">
+  <p style="color:#9CB3A5;font-size:14px;line-height:1.9;margin:0 0 22px;font-family:'Noto Sans JP',sans-serif">
+    本シミュレーターは試算用のツールです。個別の物件に基づく正確なお見積りは、無料相談にてご提示いたします。
+  </p>
+  <a href="contact.html" style="display:inline-block;background:#00E15E;color:#050C08;font-weight:800;font-size:15px;text-decoration:none;padding:16px 34px;border-radius:999px;font-family:'Noto Sans JP',sans-serif">無料相談を申し込む</a>
+</div>
 </body>
 </html>
