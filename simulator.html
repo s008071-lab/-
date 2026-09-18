@@ -35,6 +35,26 @@
       h1, h2, h3, h4, h5, h6 {
         font-family: "Shippori Mincho", "Noto Serif JP", "Hiragino Mincho ProN", serif !important;
       }
+
+      /* 入力欄の数値を白字で表示する。
+         白い入力欄のままでは文字が見えなくなるため、背景を濃色にして成立させる。
+         color-scheme: dark を指定し、数値のスピナー（上下の矢印）も暗色用に描画させる。 */
+      input[type="number"] {
+        color: #ffffff !important;
+        background-color: #1E293B !important;
+        border-color: #475569 !important;
+        caret-color: #ffffff;
+        color-scheme: dark;
+        font-weight: 600;
+      }
+      input[type="number"]::placeholder {
+        color: #94A3B8 !important;
+      }
+      input[type="number"]:focus {
+        border-color: #00E15E !important;
+        outline: 2px solid rgba(0, 225, 94, .35);
+        outline-offset: 1px;
+      }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
