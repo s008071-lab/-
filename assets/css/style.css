@@ -587,6 +587,25 @@ code{ font-family:var(--f-mono); font-size:.92em; }
 }
 :is(.section--dark,.section--dark-2) .step__tag{ color:var(--green); }
 
+/* 本文中の図版（4コマイラストなど） */
+.step__fig{
+  margin:clamp(20px,2.6vw,30px) 0 0;
+  max-width:720px;
+}
+.step__fig img{
+  width:100%; height:auto;
+  border-radius:var(--r-m);
+  border:1px solid var(--line-light);
+  background:var(--white);
+}
+:is(.section--dark,.section--dark-2) .step__fig img{ border-color:var(--line-dark); }
+.step__fig figcaption{
+  margin-top:12px;
+  font-size:12.5px; line-height:1.85;
+  color:var(--on-light-dim);
+}
+:is(.section--dark,.section--dark-2) .step__fig figcaption{ color:var(--on-dark-dim); }
+
 /* --------------------------------------------------------------------------
    13. Comparison table
    -------------------------------------------------------------------------- */
