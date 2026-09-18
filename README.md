@@ -83,7 +83,7 @@ ogtype: article            省略時は website
 
 - **イメージカラー**：ビビッドグリーン `#00E15E`（明るい背景では `#00702E` に切り替わり、可読性を確保）
 - **ベース**：ダーク `#050C08` ／ ライト `#F2F6F3`
-- **書体**：Zen Kaku Gothic New（見出し）／ Noto Sans JP（本文）／ Archivo・JetBrains Mono（英字・数値）
+- **書体**：サイト全体を明朝体で統一。Shippori Mincho（見出し・英字）／ Noto Serif JP（本文・ラベル）
 - 配色・余白・角丸・モーションはすべて `assets/css/style.css` 冒頭の CSS カスタムプロパティで一元管理しています。
   色を変える場合は `:root` の値だけを差し替えてください。
 

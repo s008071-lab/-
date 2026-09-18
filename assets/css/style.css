@@ -52,10 +52,12 @@
   --line-light-2: rgba(6,18,11,.18);
 
   /* Type */
-  --f-jp:   "Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
-  --f-jp-d: "Zen Kaku Gothic New","Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif;
-  --f-en:   "Archivo","Helvetica Neue",Arial,sans-serif;
-  --f-mono: "JetBrains Mono","SFMono-Regular",Consolas,monospace;
+  /* 明朝体。本文は可読性の高い Noto Serif JP、見出しは字面の強い Shippori Mincho。
+     欧文・ラベルも同じ明朝系で揃え、サイト全体を明朝体で統一する。 */
+  --f-jp:   "Noto Serif JP","Hiragino Mincho ProN","Yu Mincho","MS PMincho",serif;
+  --f-jp-d: "Shippori Mincho","Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;
+  --f-en:   "Shippori Mincho","Noto Serif JP",Georgia,"Times New Roman",serif;
+  --f-mono: "Noto Serif JP","Hiragino Mincho ProN",Georgia,"Times New Roman",serif;
 
   /* Metrics */
   --nav-h: 76px;
@@ -92,7 +94,7 @@ body{
   font-size:16px;
   line-height:1.9;
   letter-spacing:.02em;
-  -webkit-font-smoothing:antialiased;
+  /* 明朝体は線が細く、antialiased を効かせると暗い背景で痩せて見えるため指定しない */
   text-rendering:optimizeLegibility;
   overflow-x:hidden;
 }

@@ -196,7 +196,7 @@ HEAD = """<!DOCTYPE html>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%23050C08'/%3E%3Cpath d='M20 7.5 33 16v12L20 34.5 7 28V16L20 7.5Z' stroke='%2300E15E' stroke-width='2.4' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=JetBrains+Mono:wght@500;700&family=Noto+Sans+JP:wght@400;500;700;900&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700;900&family=Shippori+Mincho:wght@500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{base}assets/css/style.css">
 <noscript><style>[data-reveal]{{opacity:1!important;transform:none!important}}.bar__fill{{width:var(--w)!important}}</style></noscript>
 {jsonld}
