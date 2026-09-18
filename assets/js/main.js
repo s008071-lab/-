@@ -6,6 +6,38 @@
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ---------- ページ遷移時のスクロール位置リセット ---------- */
+  // ブラウザは再読み込みや「戻る/進む」で直前のスクロール位置を復元する。
+  // 別ページを開いたのに途中までスクロールされて見えるのを防ぐため、自動復元を
+  // 止め、ページを開いた時点で必ず先頭へ戻す。
+  // ただし #付きのリンク（例: about.html#merit）は、その見出しへの移動が目的
+  // なので対象外とする。
+  if ('scrollRestoration' in history) {
+    try { history.scrollRestoration = 'manual'; } catch (e) { /* 非対応環境は無視 */ }
+  }
+
+  function jumpToTop() {
+    if (location.hash && location.hash.length > 1) return; // アンカー遷移は尊重する
+    var root = document.documentElement;
+    var prev = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto'; // CSS の smooth スクロールを一時的に無効化
+    window.scrollTo(0, 0);
+    if (document.body) document.body.scrollTop = 0;
+    root.scrollTop = 0;
+    root.style.scrollBehavior = prev;
+
+    // iframe に埋め込まれている場合、内側を先頭に戻しても外側のスクロール位置が
+    // 残る。同一オリジンであればこれも先頭へ戻す（別オリジンでは例外を握りつぶす）。
+    if (window.parent && window.parent !== window) {
+      try { window.parent.scrollTo(0, 0); } catch (e) { /* クロスオリジンでは操作不可 */ }
+    }
+  }
+
+  jumpToTop();
+  // 読み込み完了後に復元が走る場合と、bfcache からの復帰（戻る/進む）に備える。
+  window.addEventListener('load', jumpToTop);
+  window.addEventListener('pageshow', jumpToTop);
+
   /* ---------- Header: stuck state ---------- */
   var hdr = document.querySelector('.hdr');
   var fab = document.querySelector('.fab');
