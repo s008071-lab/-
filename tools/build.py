@@ -32,14 +32,17 @@ SITE = {
     "origin": "https://www.ideal-properties.example.jp",
 }
 
+# (パス, 表示名, 英字ラベル, デスクトップのナビに出すか)
+# 8項目では横幅に収まらず折り返すため、事業内容はドロワーとフッターのみに置く。
 NAV = [
-    ("about.html",       "譲渡型賃貸とは", "ABOUT"),
-    ("service.html",     "事業内容",       "SERVICE"),
-    ("flow.html",        "ご利用の流れ",   "FLOW"),
-    ("simulator.html",   "コスト比較",     "SIMULATOR"),
-    ("faq.html",         "よくあるご質問", "FAQ"),
-    ("news/index.html",  "ニュース",       "NEWS"),
-    ("company.html",     "会社概要",       "COMPANY"),
+    ("about.html",       "譲渡型賃貸とは", "ABOUT",     True),
+    ("owner.html",       "オーナーの方へ", "OWNERS",    True),
+    ("service.html",     "事業内容",       "SERVICE",   False),
+    ("flow.html",        "ご利用の流れ",   "FLOW",      True),
+    ("simulator.html",   "コスト比較",     "SIMULATOR", True),
+    ("faq.html",         "よくあるご質問", "FAQ",       True),
+    ("news/index.html",  "ニュース",       "NEWS",      True),
+    ("company.html",     "会社概要",       "COMPANY",   True),
 ]
 
 ICON_ARROW = ('<svg class="btn__arrow" width="15" height="11" viewBox="0 0 15 11" fill="none" aria-hidden="true">'
@@ -69,12 +72,12 @@ def header(base: str, active: str) -> str:
         f'<a class="nav__link" href="{base}{href}"'
         + (' aria-current="page"' if href == active else "")
         + f">{jp}</a>"
-        for href, jp, _ in NAV
+        for href, jp, _, in_nav in NAV if in_nav
     )
     drawer_items = "".join(
         f'<li class="drawer__item"><a class="drawer__a" href="{base}{href}">'
         f'<span class="n">{i+1:02d}</span><span class="jp">{jp}</span><span class="en">{en}</span></a></li>'
-        for i, (href, jp, en) in enumerate(NAV)
+        for i, (href, jp, en, _) in enumerate(NAV)
     )
     return f"""<header class="hdr">
   <div class="hdr__in">
@@ -99,7 +102,7 @@ def header(base: str, active: str) -> str:
 <div class="drawer" id="drawer">
   <ul class="drawer__list">{drawer_items}
     <li class="drawer__item"><a class="drawer__a" href="{base}contact.html">
-      <span class="n">08</span><span class="jp">お問い合わせ</span><span class="en">CONTACT</span></a></li>
+      <span class="n">09</span><span class="jp">お問い合わせ</span><span class="en">CONTACT</span></a></li>
   </ul>
   <div class="drawer__foot">
     {line_btn()}
