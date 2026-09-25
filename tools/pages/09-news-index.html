@@ -1,0 +1,70 @@
+---
+out: news/index.html
+title: ニュース・トピックス｜株式会社Ideal properties
+desc: 株式会社Ideal propertiesからのお知らせ、譲渡型賃貸に関するトピックス・コラムを掲載しています。
+active: news/index.html
+---
+
+<section class="phero">
+  <span class="phero__bg" aria-hidden="true"></span>
+  <div class="wrap phero__in">
+    <nav class="crumb" aria-label="パンくずリスト"><a href="{{BASE}}index.html">HOME</a><span>/</span><span aria-current="page">NEWS</span></nav>
+    <p class="phero__en" aria-hidden="true">News</p>
+    <h1 class="h-1">ニュース・トピックス</h1>
+    <p class="lead">当社からのお知らせと、譲渡型賃貸にまつわる読みものをお届けします。</p>
+  </div>
+</section>
+
+<section class="section section--dark">
+  <span class="gridlines" aria-hidden="true"></span>
+  <div class="wrap">
+    <div class="btn-row mb-m" role="group" aria-label="カテゴリで絞り込む" data-reveal>
+      <button class="btn btn--sm" type="button" data-filter="all" aria-pressed="true">すべて</button>
+      <button class="btn btn--ghost btn--sm" type="button" data-filter="news" aria-pressed="false">NEWS</button>
+      <button class="btn btn--ghost btn--sm" type="button" data-filter="topics" aria-pressed="false">TOPICS</button>
+      <button class="btn btn--ghost btn--sm" type="button" data-filter="column" aria-pressed="false">COLUMN</button>
+    </div>
+
+    <ul class="news" data-reveal data-reveal-delay="1">
+      <li class="news__i" data-cat="column"><a class="news__a" href="2026-09-25-credit-info.html">
+        <time class="news__date" datetime="2026-09-25">2026.09.25</time>
+        <span class="cat cat--column">COLUMN</span>
+        <span class="news__t">異動があっても住宅ローンは検討できる？信用情報に不安がある方が最初に確認したいこと</span>
+        <svg class="news__arrow" width="15" height="11" viewBox="0 0 15 11" fill="none" aria-hidden="true"><path d="M9.2 1l4.3 4.5L9.2 10M13.2 5.5H1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a></li>
+      <li class="news__i" data-cat="column"><a class="news__a" href="2026-09-10-owner-merits.html">
+        <time class="news__date" datetime="2026-09-10">2026.09.10</time>
+        <span class="cat cat--column">COLUMN</span>
+        <span class="news__t">空室・滞納・出口。不動産投資の三つの不安を、譲渡型賃貸はどう解くのか</span>
+        <svg class="news__arrow" width="15" height="11" viewBox="0 0 15 11" fill="none" aria-hidden="true"><path d="M9.2 1l4.3 4.5L9.2 10M13.2 5.5H1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a></li>
+      <li class="news__i" data-cat="news"><a class="news__a" href="2026-09-01-line-consultation.html">
+        <time class="news__date" datetime="2026-09-01">2026.09.01</time>
+        <span class="cat cat--news">NEWS</span>
+        <span class="news__t">LINEでの無料相談窓口を開設しました</span>
+        <svg class="news__arrow" width="15" height="11" viewBox="0 0 15 11" fill="none" aria-hidden="true"><path d="M9.2 1l4.3 4.5L9.2 10M13.2 5.5H1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a></li>
+      <li class="news__i" data-cat="topics"><a class="news__a" href="2026-08-20-simulator-release.html">
+        <time class="news__date" datetime="2026-08-20">2026.08.20</time>
+        <span class="cat cat--topics">TOPICS</span>
+        <span class="news__t">生涯コスト比較シミュレーターを公開しました</span>
+        <svg class="news__arrow" width="15" height="11" viewBox="0 0 15 11" fill="none" aria-hidden="true"><path d="M9.2 1l4.3 4.5L9.2 10M13.2 5.5H1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a></li>
+      <li class="news__i" data-cat="column"><a class="news__a" href="2026-08-05-self-employed.html">
+        <time class="news__date" datetime="2026-08-05">2026.08.05</time>
+        <span class="cat cat--column">COLUMN</span>
+        <span class="news__t">自営業・フリーランスの住まい探し ——「経費計上」という視点</span>
+        <svg class="news__arrow" width="15" height="11" viewBox="0 0 15 11" fill="none" aria-hidden="true"><path d="M9.2 1l4.3 4.5L9.2 10M13.2 5.5H1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a></li>
+    </ul>
+
+    <div class="disc mt-l" data-reveal>
+      <p class="disc__h">記事の追加方法（サイト運用者向け）</p>
+      <ul>
+        <li>記事は <code class="mono">tools/pages/</code> にフラグメントを追加し、<code class="mono">python3 tools/build.py</code> を実行すると生成されます。</li>
+        <li>この一覧への追加は <code class="mono">tools/pages/09-news-index.html</code> に <code class="mono">&lt;li class="news__i" data-cat="…"&gt;</code> を1行追加してください。</li>
+        <li><code class="mono">data-cat</code> には <code class="mono">news</code> / <code class="mono">topics</code> / <code class="mono">column</code> のいずれかを指定します。</li>
+      </ul>
+    </div>
+  </div>
+</section>
