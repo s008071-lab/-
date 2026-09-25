@@ -33,16 +33,18 @@ SITE = {
 }
 
 # (パス, 表示名, 英字ラベル, デスクトップのナビに出すか)
-# 8項目では横幅に収まらず折り返すため、事業内容はドロワーとフッターのみに置く。
+# 横幅に収まらず折り返すため、事業内容とご利用の流れはドロワーとフッターのみに置く。
+# 先頭2項目は「住まいを探す方」「オーナー」の2つの入口で、トップのDOORSと対応させる。
 NAV = [
-    ("about.html",       "譲渡型賃貸とは", "ABOUT",     True),
-    ("owner.html",       "オーナーの方へ", "OWNERS",    True),
-    ("service.html",     "事業内容",       "SERVICE",   False),
-    ("flow.html",        "ご利用の流れ",   "FLOW",      True),
-    ("simulator.html",   "コスト比較",     "SIMULATOR", True),
-    ("faq.html",         "よくあるご質問", "FAQ",       True),
-    ("news/index.html",  "ニュース",       "NEWS",      True),
-    ("company.html",     "会社概要",       "COMPANY",   True),
+    ("resident.html",    "住まいをお探しの方", "RESIDENTS", True),
+    ("owner.html",       "オーナーの方へ",     "OWNERS",    True),
+    ("about.html",       "譲渡型賃貸とは",     "ABOUT",     True),
+    ("service.html",     "事業内容",           "SERVICE",   False),
+    ("flow.html",        "ご利用の流れ",       "FLOW",      False),
+    ("simulator.html",   "コスト比較",         "SIMULATOR", True),
+    ("faq.html",         "よくあるご質問",     "FAQ",       True),
+    ("news/index.html",  "ニュース",           "NEWS",      True),
+    ("company.html",     "会社概要",           "COMPANY",   True),
 ]
 
 ICON_ARROW = ('<svg class="btn__arrow" width="15" height="11" viewBox="0 0 15 11" fill="none" aria-hidden="true">'
@@ -135,6 +137,7 @@ def footer(base: str) -> str:
         <div>
           <p class="ftr__h">ABOUT</p>
           <ul class="ftr__l">
+            <li><a href="{base}resident.html">お住まいをお探しの方へ</a></li>
             <li><a href="{base}about.html">譲渡型賃貸とは</a></li>
             <li><a href="{base}about.html#merit">5つのメリット</a></li>
             <li><a href="{base}about.html#cost">生涯コスト比較</a></li>
@@ -145,7 +148,7 @@ def footer(base: str) -> str:
           <p class="ftr__h">SERVICE</p>
           <ul class="ftr__l">
             <li><a href="{base}service.html">事業内容</a></li>
-            <li><a href="{base}service.html#owner">オーナー・投資家の方へ</a></li>
+            <li><a href="{base}owner.html">投資家・オーナーの方へ</a></li>
             <li><a href="{base}flow.html">ご利用の流れ</a></li>
             <li><a href="{base}faq.html">よくあるご質問</a></li>
           </ul>

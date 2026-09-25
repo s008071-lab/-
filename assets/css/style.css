@@ -611,6 +611,26 @@ code{ font-family:var(--f-mono); font-size:.92em; }
 .door:hover .door__go{ gap:1.1em; }
 .door__go::after{ content:""; position:absolute; inset:0; border-radius:999px; }
 
+/* 向き・不向きの2カラム。肯定側は緑のチェック、慎重側は中立のマーカーにして、
+   同じ形のアイコンで正反対の意味を表さないようにする。 */
+.fitlist{ display:grid; gap:12px; margin-bottom:0; }
+.fitlist li{
+  position:relative; padding-left:26px; font-size:14.5px; line-height:1.85;
+  color:var(--on-dark-soft);
+}
+:is(.section--light,.section--light-2) .fitlist li{ color:var(--on-light-soft); }
+.fitlist li::before{
+  content:""; position:absolute; left:2px; top:.66em;
+  width:10px; height:6px; border-left:1.8px solid var(--green); border-bottom:1.8px solid var(--green);
+  transform:rotate(-45deg);
+}
+:is(.section--light,.section--light-2) .fitlist li::before{ border-color:var(--green-ink); }
+.fitlist--care li::before{
+  top:.95em; width:11px; height:0; border-left:0; border-bottom:1.8px solid var(--on-dark-dim);
+  transform:none;
+}
+:is(.section--light,.section--light-2) .fitlist--care li::before{ border-color:var(--on-light-dim); }
+
 /* --------------------------------------------------------------------------
    11. Problem checklist
    -------------------------------------------------------------------------- */
