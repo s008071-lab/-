@@ -53,11 +53,12 @@ ICON_ARROW = ('<svg class="btn__arrow" width="15" height="11" viewBox="0 0 15 11
 
 LOGO_MARK = (
     '<svg class="logo__mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">'
-    '<path d="M20 2.5 36.5 13v14L20 37.5 3.5 27V13L20 2.5Z" stroke="#00E15E" stroke-width="2.2" '
+    # 白地では線画のビビッドグリーンが沈むため、六角形はベタ塗りにして家を濃いインクで抜く
+    '<path d="M20 2.5 36.5 13v14L20 37.5 3.5 27V13L20 2.5Z" fill="#00E15E" stroke="#00A845" '
+    'stroke-width="1.6" stroke-linejoin="round"/>'
+    '<path d="M13 25.5V17l7-4.4 7 4.4v8.5" stroke="#06120B" stroke-width="2.2" stroke-linecap="round" '
     'stroke-linejoin="round"/>'
-    '<path d="M13 25.5V17l7-4.4 7 4.4v8.5" stroke="#00E15E" stroke-width="2.2" stroke-linecap="round" '
-    'stroke-linejoin="round"/>'
-    '<path d="M17.2 25.5v-4.8h5.6v4.8" stroke="#EAF3ED" stroke-width="1.8" stroke-linecap="round"/>'
+    '<path d="M17.2 25.5v-4.8h5.6v4.8" stroke="#06120B" stroke-width="1.8" stroke-linecap="round"/>'
     '</svg>'
 )
 
@@ -104,7 +105,7 @@ def header(base: str, active: str) -> str:
 <div class="drawer" id="drawer">
   <ul class="drawer__list">{drawer_items}
     <li class="drawer__item"><a class="drawer__a" href="{base}contact.html">
-      <span class="n">09</span><span class="jp">お問い合わせ</span><span class="en">CONTACT</span></a></li>
+      <span class="n">{len(NAV) + 1:02d}</span><span class="jp">お問い合わせ</span><span class="en">CONTACT</span></a></li>
   </ul>
   <div class="drawer__foot">
     {line_btn()}
@@ -198,7 +199,7 @@ HEAD = """<!DOCTYPE html>
 <meta property="og:url" content="{canonical}">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#050C08">
+<meta name="theme-color" content="#FFFFFF">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%23050C08'/%3E%3Cpath d='M20 7.5 33 16v12L20 34.5 7 28V16L20 7.5Z' stroke='%2300E15E' stroke-width='2.4' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
