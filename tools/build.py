@@ -51,16 +51,11 @@ ICON_ARROW = ('<svg class="btn__arrow" width="15" height="11" viewBox="0 0 15 11
               '<path d="M9.2 1l4.3 4.5L9.2 10M13.2 5.5H1" stroke="currentColor" stroke-width="1.6" '
               'stroke-linecap="round" stroke-linejoin="round"/></svg>')
 
-LOGO_MARK = (
-    '<svg class="logo__mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">'
-    # 白地では線画のビビッドグリーンが沈むため、六角形はベタ塗りにして家を濃いインクで抜く
-    '<path d="M20 2.5 36.5 13v14L20 37.5 3.5 27V13L20 2.5Z" fill="#00E15E" stroke="#00A845" '
-    'stroke-width="1.6" stroke-linejoin="round"/>'
-    '<path d="M13 25.5V17l7-4.4 7 4.4v8.5" stroke="#06120B" stroke-width="2.2" stroke-linecap="round" '
-    'stroke-linejoin="round"/>'
-    '<path d="M17.2 25.5v-4.8h5.6v4.8" stroke="#06120B" stroke-width="1.8" stroke-linecap="round"/>'
-    '</svg>'
-)
+# 支給された会社ロゴ（透過PNG）。社名の文字までロゴに含まれるため、
+# 以前の logo__txt（Ideal properties / JYOTO-GATA CHINTAI）は置かない。
+def logo_img(base: str) -> str:
+    return (f'<img class="logo__img" src="{base}assets/img/logo.png" '
+            f'width="480" height="139" alt="{SITE["name"]}" decoding="async">')
 
 
 def line_btn(cls: str = "btn btn--line", label: str = "LINEで無料相談") -> str:
@@ -85,11 +80,7 @@ def header(base: str, active: str) -> str:
     return f"""<header class="hdr">
   <div class="hdr__in">
     <a class="logo" href="{base}index.html" aria-label="{SITE['name']} ホームへ">
-      {LOGO_MARK}
-      <span class="logo__txt">
-        <span class="logo__en">Ideal properties</span>
-        <span class="logo__jp">JYOTO-GATA CHINTAI</span>
-      </span>
+      {logo_img(base)}
     </a>
     <nav class="nav" aria-label="メインメニュー">{links}</nav>
     <div class="hdr__cta">
@@ -120,11 +111,7 @@ def footer(base: str) -> str:
     <div class="ftr__top">
       <div class="ftr__brand">
         <a class="logo" href="{base}index.html">
-          {LOGO_MARK}
-          <span class="logo__txt">
-            <span class="logo__en">Ideal properties</span>
-            <span class="logo__jp">JYOTO-GATA CHINTAI</span>
-          </span>
+          {logo_img(base)}
         </a>
         <p class="ftr__copy">{SITE['catch']}<br>住宅ローンに頼らない「譲渡型賃貸」で、マイホームという選択肢をすべての方へ。</p>
         <address class="ftr__addr">
@@ -200,7 +187,8 @@ HEAD = """<!DOCTYPE html>
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#FFFFFF">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='9' fill='%23050C08'/%3E%3Cpath d='M20 7.5 33 16v12L20 34.5 7 28V16L20 7.5Z' stroke='%2300E15E' stroke-width='2.4' fill='none' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="{base}assets/img/favicon.png">
+<link rel="apple-touch-icon" href="{base}assets/img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700;900&family=Shippori+Mincho:wght@500;600;700;800&display=swap" rel="stylesheet">
