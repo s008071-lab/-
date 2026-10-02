@@ -904,6 +904,10 @@ code{ font-family:var(--f-mono); font-size:.92em; }
 .callout p{ margin:0; color:var(--ink); font-size:14.5px; }
 .callout .h-3{ margin-bottom:10px; color:var(--green-ink); }
 
+/* 記事見出し。本文カラムの実幅は 732px しかなく、トップページと同じ字送りだと
+   指定した改行位置で収まらず行が割れる。1行21文字が収まる 34px を上限とする。 */
+.article__head .h-1{ font-size:clamp(25px,3.4vw,34px); line-height:1.45; }
+
 /* --------------------------------------------------------------------------
    17. Page hero (sub pages)
    -------------------------------------------------------------------------- */
