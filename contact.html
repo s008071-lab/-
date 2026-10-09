@@ -124,16 +124,21 @@
         </div>
       </div>
 
-      <div class="grid g-2" style="gap:26px">
+      <div class="grid g-3" style="gap:26px">
         <div class="field">
           <label class="field__l" for="c-mail">メールアドレス<span class="req">必須</span></label>
           <input class="input" type="email" id="c-mail" name="メールアドレス" required autocomplete="email" placeholder="example@mail.com">
         </div>
         <div class="field">
-          <label class="field__l" for="c-tel">電話番号<span class="opt">任意</span></label>
-          <input class="input" type="tel" id="c-tel" name="電話番号" autocomplete="tel" placeholder="09012345678">
+          <label class="field__l" for="c-tel">電話番号<span class="req">必須</span></label>
+          <input class="input" type="tel" id="c-tel" name="電話番号" required autocomplete="tel" placeholder="09012345678">
+        </div>
+        <div class="field">
+          <label class="field__l" for="c-line">LINE ID<span class="opt">任意</span></label>
+          <input class="input" type="text" id="c-line" name="LINE ID" autocomplete="off" placeholder="例：ideal_taro">
         </div>
       </div>
+      <p class="field__help" style="margin-top:-10px">LINE IDをご記入いただくと、LINEでのご連絡も承ります。ご希望の連絡方法があれば、ご相談内容欄にお書き添えください。</p>
 
       <div class="grid g-2" style="gap:26px">
         <div class="field">
