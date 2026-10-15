@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ヴォーガコルテ西馬込 309号室</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f1ec;
+    --paper: #ffffff;
+    --ink: #1f2a37;
+    --muted: #6b7280;
+    --line: #e5e0d8;
+    --accent: #1e3a5f;
+    --accent-2: #b08d57;
+    --accent-soft: #eef2f7;
+    --warn-bg: #fff7e0;
+    --warn-ink: #8a5a00;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12161c; --paper: #1b2129; --ink: #e8eaed; --muted: #9aa3ae;
+      --line: #2c3540; --accent: #8fb3e0; --accent-2: #d4b483; --accent-soft: #222c38;
+      --warn-bg: #3a2f12; --warn-ink: #f2cf7a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12161c; --paper: #1b2129; --ink: #e8eaed; --muted: #9aa3ae;
+    --line: #2c3540; --accent: #8fb3e0; --accent-2: #d4b483; --accent-soft: #222c38;
+    --warn-bg: #3a2f12; --warn-ink: #f2cf7a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    line-height: 1.75; -webkit-font-smoothing: antialiased;
+  }
+  .toolbar {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap;
+    padding: 10px 16px; background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(6px); border-bottom: 1px solid var(--line);
+  }
+  .toolbar button {
+    font: inherit; font-size: 13px; cursor: pointer;
+    padding: 6px 14px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+  }
+  .toolbar button.primary { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+
+  .deck { max-width: 1040px; margin: 0 auto; padding: 24px 16px 64px; display: grid; gap: 28px; }
+  .slide {
+    background: var(--paper); border: 1px solid var(--line); border-radius: 14px;
+    padding: 48px 56px; min-height: 560px; position: relative; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04);
+  }
+  .slide-no { position: absolute; right: 24px; bottom: 16px; font-size: 12px; color: var(--muted); letter-spacing: .1em; }
+  .eyebrow { font-size: 12px; letter-spacing: .25em; color: var(--accent-2); font-weight: 700; text-transform: uppercase; }
+  h1, h2 { font-family: "Noto Serif JP", serif; font-weight: 700; margin: 0; }
+  h2 { font-size: 28px; margin: 6px 0 28px; padding-bottom: 14px; border-bottom: 2px solid var(--accent); display: inline-block; }
+  h3 { font-size: 17px; margin: 0 0 8px; color: var(--accent); }
+  p { margin: 0 0 12px; }
+  .muted { color: var(--muted); }
+  .small { font-size: 12px; }
+
+  /* Cover */
+  .cover {
+    display: flex; flex-direction: column; justify-content: space-between;
+    background: linear-gradient(135deg, #1e3a5f 0%, #13263f 100%); color: #fff; border: none;
+  }
+  .cover .eyebrow { color: #d4b483; }
+  .cover h1 { font-size: 46px; line-height: 1.3; margin: 18px 0 10px; }
+  .cover .room { font-size: 26px; font-family: "Noto Serif JP", serif; color: #d4b483; }
+  .cover .lead { margin-top: 24px; font-size: 16px; opacity: .9; max-width: 560px; }
+  .cover-meta { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; border-top: 1px solid rgba(255,255,255,.25); padding-top: 18px; font-size: 14px; }
+  .cover-price { font-family: "Noto Serif JP", serif; font-size: 34px; }
+  .cover-price small { font-size: 14px; opacity: .8; margin-left: 4px; }
+  .cover .slide-no { color: rgba(255,255,255,.6); }
+
+  /* Highlights */
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .card { border: 1px solid var(--line); border-radius: 12px; padding: 22px; background: var(--paper); }
+  .card .num { font-family: "Noto Serif JP", serif; font-size: 30px; color: var(--accent-2); line-height: 1; margin-bottom: 10px; }
+  .card p { font-size: 14px; color: var(--muted); margin: 0; }
+
+  /* Spec table */
+  table.spec { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.spec th, table.spec td { padding: 11px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  table.spec th { width: 26%; background: var(--accent-soft); font-weight: 500; color: var(--accent); white-space: nowrap; }
+  .spec-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+
+  .tag { display: inline-block; font-size: 11px; padding: 1px 8px; border-radius: 999px; background: var(--warn-bg); color: var(--warn-ink); margin-left: 6px; vertical-align: middle; white-space: nowrap; }
+  body.confirmed .tag.ref { display: none; }
+
+  /* Feature chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { padding: 6px 14px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 14px; }
+
+  /* Access */
+  .route { display: grid; gap: 10px; }
+  .route-row { display: grid; grid-template-columns: 140px 1fr 80px; align-items: center; gap: 12px; font-size: 15px; }
+  .bar { height: 10px; background: var(--accent-soft); border-radius: 999px; overflow: hidden; }
+  .bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 999px; }
+  .route-row .min { text-align: right; font-weight: 700; color: var(--accent); }
+
+  /* Cost */
+  .cost-total { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; padding: 18px 22px; border-radius: 12px; background: var(--accent); color: var(--paper); margin-bottom: 18px; }
+  .cost-total .big { font-family: "Noto Serif JP", serif; font-size: 34px; }
+  table.cost { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.cost td { padding: 9px 4px; border-bottom: 1px dashed var(--line); }
+  table.cost td:last-child { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .steps { counter-reset: s; display: grid; gap: 14px; }
+  .step { display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start; }
+  .step::before { counter-increment: s; content: counter(s); width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: var(--paper); display: grid; place-items: center; font-weight: 700; font-family: "Noto Serif JP", serif; font-size: 18px; }
+  .note { margin-top: 24px; font-size: 11.5px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
+
+  /* Editor */
+  dialog { border: 1px solid var(--line); border-radius: 14px; padding: 0; width: min(640px, calc(100vw - 32px)); background: var(--paper); color: var(--ink); }
+  dialog::backdrop { background: rgba(0,0,0,.45); }
+  .dlg-head { padding: 18px 22px; border-bottom: 1px solid var(--line); }
+  .dlg-body { padding: 18px 22px; max-height: 60vh; overflow: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+  .dlg-body label { font-size: 12px; color: var(--muted); display: grid; gap: 4px; }
+  .dlg-body input { font: inherit; font-size: 14px; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); width: 100%; }
+  .dlg-body .full { grid-column: 1 / -1; }
+  .dlg-foot { padding: 14px 22px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .dlg-foot button { font: inherit; font-size: 13px; padding: 7px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer; }
+  .dlg-foot button.primary { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+  .dlg-foot label { font-size: 13px; display: flex; align-items: center; gap: 6px; }
+
+  @media (max-width: 760px) {
+    .slide { padding: 28px 20px 40px; min-height: 0; }
+    .cover h1 { font-size: 32px; }
+    .grid-2, .grid-3, .spec-wrap, .dlg-body { grid-template-columns: 1fr; }
+    .route-row { grid-template-columns: 96px 1fr 64px; font-size: 14px; }
+    h2 { font-size: 22px; }
+  }
+
+  @media print {
+    @page { size: A4 landscape; margin: 0; }
+    body { background: #fff; }
+    .toolbar, dialog { display: none !important; }
+    .deck { max-width: none; padding: 0; gap: 0; }
+    .slide { border: none; border-radius: 0; box-shadow: none; height: 210mm; min-height: 0; page-break-after: always; break-after: page; padding: 16mm 20mm; }
+    .tag.ref { display: none; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button id="btn-edit">✏️ 募集条件を編集</button>
+  <button id="btn-theme">🌓 表示切替</button>
+  <button class="primary" onclick="window.print()">🖨 印刷 / PDF保存</button>
+</div>
+
+<main class="deck">
+
+  <!-- 1. Cover -->
+  <section class="slide cover">
+    <div>
+      <div class="eyebrow">Property Proposal</div>
+      <h1>ヴォーガコルテ西馬込</h1>
+      <div class="room"><span data-f="room"></span>号室 ／ <span data-f="layout"></span>・<span data-f="area"></span>㎡</div>
+      <p class="lead">都営浅草線「西馬込」駅 徒歩9分。始発駅から座って通勤できる、閑静な馬込エリアのRCマンションをご紹介いたします。</p>
+    </div>
+    <div class="cover-meta">
+      <div>
+        <div class="cover-price"><span data-f="rentMan"></span>万円<small>／月</small></div>
+        <div>管理費 <span data-f="feeYen"></span>円</div>
+      </div>
+      <div style="text-align:right">
+        <div><span data-f="date"></span></div>
+        <div><span data-f="company"></span>　担当：<span data-f="staff"></span></div>
+      </div>
+    </div>
+    <div class="slide-no">01</div>
+  </section>
+
+  <!-- 2. Highlights -->
+  <section class="slide">
+    <div class="eyebrow">Highlights</div>
+    <h2>このお部屋をおすすめする4つの理由</h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="num">01</div>
+        <h3>始発駅「西馬込」で座って通勤</h3>
+        <p>都営浅草線の始発駅。五反田・新橋・日本橋方面へ乗り換えなし、朝の通勤も座って移動できる可能性が高いのが魅力です。</p>
+      </div>
+      <div class="card">
+        <div class="num">02</div>
+        <h3>安心の鉄筋コンクリート造</h3>
+        <p>2009年3月竣工のRC造5階建。遮音性・耐火性に優れ、2023年12月には大規模修繕を実施済みで共用部も良好です。</p>
+      </div>
+      <div class="card">
+        <div class="num">03</div>
+        <h3>充実のセキュリティ</h3>
+        <p>オートロック・防犯カメラ・モニター付きインターホン完備。女性の一人暮らしやご夫婦にも安心の住環境です。</p>
+      </div>
+      <div class="card">
+        <div class="num">04</div>
+        <h3>宅配ボックス・24時間ゴミ出し</h3>
+        <p>不在時も荷物を受け取れる宅配ボックス、敷地内ゴミ置場で24時間ゴミ出し可能。忙しい毎日をサポートします。</p>
+      </div>
+    </div>
+    <div class="slide-no">02</div>
+  </section>
+
+  <!-- 3. Spec -->
+  <section class="slide">
+    <div class="eyebrow">Outline</div>
+    <h2>物件概要</h2>
+    <div class="spec-wrap">
+      <table class="spec">
+        <tr><th>物件名</th><td>ヴォーガコルテ西馬込<br><span class="small muted">（ヴォーガコルテ西馬込アジールコート）</span></td></tr>
+        <tr><th>号室</th><td><span data-f="room"></span>号室（<span data-f="floor"></span>階／地上5階建）</td></tr>
+        <tr><th>所在地</th><td>東京都大田区中馬込3丁目16-15</td></tr>
+        <tr><th>交通</th><td>都営浅草線「西馬込」駅 徒歩9分<br>都営浅草線「馬込」駅 徒歩11分</td></tr>
+        <tr><th>構造</th><td>鉄筋コンクリート造（RC）</td></tr>
+        <tr><th>築年月</th><td>2009年3月（築17年）</td></tr>
+        <tr><th>総戸数</th><td>82戸</td></tr>
+      </table>
+      <table class="spec">
+        <tr><th>賃料</th><td><span data-f="rentYen"></span>円<span class="tag ref">要確認</span></td></tr>
+        <tr><th>管理費</th><td><span data-f="feeYen"></span>円<span class="tag ref">要確認</span></td></tr>
+        <tr><th>敷金／礼金</th><td><span data-f="depositTxt"></span>／<span data-f="keyTxt"></span><span class="tag ref">要確認</span></td></tr>
+        <tr><th>間取り</th><td><span data-f="layout"></span><span class="tag ref">要確認</span></td></tr>
+        <tr><th>専有面積</th><td><span data-f="area"></span>㎡<span class="tag ref">要確認</span></td></tr>
+        <tr><th>主要採光面</th><td><span data-f="dir"></span><span class="tag ref">要確認</span></td></tr>
+        <tr><th>入居時期</th><td><span data-f="moveIn"></span></td></tr>
+      </table>
+    </div>
+    <p class="note">※ 建物情報は公開情報に基づきます。賃料・面積等の募集条件は最新の募集図面（SUUMO掲載情報）にてご確認ください。</p>
+    <div class="slide-no">03</div>
+  </section>
+
+  <!-- 4. Features -->
+  <section class="slide">
+    <div class="eyebrow">Features</div>
+    <h2>お部屋と建物の設備</h2>
+    <div class="grid-2">
+      <div>
+        <h3>室内設備</h3>
+        <div class="chips">
+          <span class="chip">浴室乾燥機</span>
+          <span class="chip">追焚機能付バス</span>
+          <span class="chip">独立洗面台</span>
+          <span class="chip">温水洗浄便座</span>
+          <span class="chip">バス・トイレ別</span>
+          <span class="chip">システムキッチン</span>
+          <span class="chip">エアコン</span>
+          <span class="chip">室内洗濯機置場</span>
+          <span class="chip">全居室収納</span>
+          <span class="chip">フローリング</span>
+          <span class="chip">バルコニー</span>
+          <span class="chip">光ファイバー</span>
+        </div>
+      </div>
+      <div>
+        <h3>共用部・セキュリティ</h3>
+        <div class="chips">
+          <span class="chip">オートロック</span>
+          <span class="chip">モニター付インターホン</span>
+          <span class="chip">防犯カメラ</span>
+          <span class="chip">エレベーター</span>
+          <span class="chip">宅配ボックス</span>
+          <span class="chip">敷地内ゴミ置場</span>
+          <span class="chip">24時間ゴミ出し可</span>
+          <span class="chip">駐輪場</span>
+          <span class="chip">バイク置場</span>
+          <span class="chip">大規模修繕済（2023年12月）</span>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:28px; background: var(--accent-soft); border: none;">
+      <h3>暮らしのイメージ</h3>
+      <p style="color: var(--ink)">浴室乾燥機で雨の日や夜間でも洗濯物が乾き、独立洗面台で朝の身支度もスムーズ。宅配ボックスと24時間ゴミ出しで、共働き・在宅ワークの方にも時間を有効に使える住まいです。</p>
+    </div>
+    <p class="note">※ 設備は建物の募集実績に基づく一般的な仕様です。309号室の設備は募集図面にて最終確認ください。</p>
+    <div class="slide-no">04</div>
+  </section>
+
+  <!-- 5. Access -->
+  <section class="slide">
+    <div class="eyebrow">Access</div>
+    <h2>アクセス</h2>
+    <div class="grid-2">
+      <div>
+        <h3>最寄り駅</h3>
+        <table class="spec" style="margin-bottom:24px">
+          <tr><th>西馬込駅</th><td>都営浅草線　徒歩9分<br><span class="small muted">始発駅・座って通勤可能</span></td></tr>
+          <tr><th>馬込駅</th><td>都営浅草線　徒歩11分</td></tr>
+        </table>
+        <h3>西馬込駅が便利な理由</h3>
+        <p class="small">都営浅草線は京急線・京成線と相互直通運転。品川・羽田空港方面、日本橋・浅草方面、さらに成田空港方面へもアクセスしやすく、出張や旅行にも便利です。</p>
+      </div>
+      <div>
+        <h3>西馬込駅から主要駅まで（乗車時間の目安）</h3>
+        <div class="route">
+          <div class="route-row"><span>五反田</span><div class="bar"><span style="width:28%"></span></div><span class="min">約10分</span></div>
+          <div class="route-row"><span>品川（泉岳寺乗換）</span><div class="bar"><span style="width:45%"></span></div><span class="min">約16分</span></div>
+          <div class="route-row"><span>新橋</span><div class="bar"><span style="width:55%"></span></div><span class="min">約20分</span></div>
+          <div class="route-row"><span>東銀座</span><div class="bar"><span style="width:62%"></span></div><span class="min">約22分</span></div>
+          <div class="route-row"><span>日本橋</span><div class="bar"><span style="width:75%"></span></div><span class="min">約26分</span></div>
+          <div class="route-row"><span>浅草</span><div class="bar"><span style="width:95%"></span></div><span class="min">約35分</span></div>
+        </div>
+        <p class="note">※ 所要時間は日中平常時の目安です。乗換・待ち時間・時間帯により異なります。</p>
+      </div>
+    </div>
+    <div class="slide-no">05</div>
+  </section>
+
+  <!-- 6. Area -->
+  <section class="slide">
+    <div class="eyebrow">Neighborhood</div>
+    <h2>周辺環境・エリアの魅力</h2>
+    <div class="grid-3">
+      <div class="card">
+        <h3>閑静な住宅街</h3>
+        <p>中馬込は低層の住宅が多い落ち着いたエリア。都心へのアクセスの良さと、静かな住環境を両立できます。</p>
+      </div>
+      <div class="card">
+        <h3>文化の香る「馬込文士村」</h3>
+        <p>大正〜昭和初期に多くの作家・芸術家が暮らした歴史あるまち。散策路や記念館など、緑と文化に触れられます。</p>
+      </div>
+      <div class="card">
+        <h3>空港アクセスも良好</h3>
+        <p>浅草線・京急線直通で羽田空港方面へ。出張や帰省が多い方にもおすすめの立地です。</p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:22px">
+      <h3>周辺の生活施設</h3>
+      <p id="area-list" style="color:var(--ink)"></p>
+      <p class="small">（編集ボタンからスーパー・コンビニ・病院などの施設名と距離を追記できます）</p>
+    </div>
+    <div class="slide-no">06</div>
+  </section>
+
+  <!-- 7. Cost -->
+  <section class="slide">
+    <div class="eyebrow">Cost Simulation</div>
+    <h2>ご入居時の費用シミュレーション</h2>
+    <div class="grid-2">
+      <div>
+        <div class="cost-total"><span>初期費用 合計（概算）</span><span class="big" id="init-total"></span></div>
+        <table class="cost" id="init-table"></table>
+      </div>
+      <div>
+        <div class="cost-total" style="background: var(--accent-2)"><span>毎月のお支払い</span><span class="big" id="month-total"></span></div>
+        <table class="cost" id="month-table"></table>
+        <div class="card" style="margin-top:18px; background: var(--accent-soft); border:none">
+          <h3>年間の住居費</h3>
+          <p style="color:var(--ink)">賃料＋管理費 × 12ヶ月 ＝ <strong id="year-total"></strong></p>
+        </div>
+      </div>
+    </div>
+    <p class="note">※ 前家賃は<span data-f="moveMonth"></span>月分（日割含まず）で算出した概算です。保証会社利用料・火災保険料・鍵交換費等は管理会社の指定により異なります。正式なお見積りは別途ご提示いたします。</p>
+    <div class="slide-no">07</div>
+  </section>
+
+  <!-- 8. Next -->
+  <section class="slide">
+    <div class="eyebrow">Next Step</div>
+    <h2>ご入居までの流れ</h2>
+    <div class="grid-2">
+      <div class="steps">
+        <div class="step"><div><h3>ご内見</h3><p class="small">お部屋の広さ・日当たり・周辺環境を実際にご確認ください。</p></div></div>
+        <div class="step"><div><h3>お申込み・入居審査</h3><p class="small">申込書と本人確認書類をご提出。審査は通常3〜5営業日程度です。</p></div></div>
+        <div class="step"><div><h3>ご契約・初期費用のお支払い</h3><p class="small">重要事項説明のうえ、賃貸借契約を締結します。</p></div></div>
+        <div class="step"><div><h3>鍵のお渡し・ご入居</h3><p class="small">新生活のスタートです。</p></div></div>
+      </div>
+      <div class="card" style="background: var(--accent); color: var(--paper); border:none; display:flex; flex-direction:column; justify-content:center">
+        <div class="eyebrow" style="color:#d4b483">Contact</div>
+        <p style="font-family:'Noto Serif JP',serif; font-size:22px; margin:10px 0 18px">人気の始発駅エリア。<br>空室のうちにぜひご内見を。</p>
+        <p style="margin:0"><span data-f="company"></span></p>
+        <p style="margin:0">担当：<span data-f="staff"></span></p>
+        <p style="margin:0">TEL：<span data-f="tel"></span></p>
+      </div>
+    </div>
+    <div class="slide-no">08</div>
+  </section>
+
+</main>
+
+<dialog id="editor">
+  <form method="dialog">
+    <div class="dlg-head">
+      <strong>募集条件の編集</strong>
+      <div class="small muted">SUUMO掲載の最新条件を入力してください。入力内容はこのブラウザに保存されます。</div>
+    </div>
+    <div class="dlg-body" id="dlg-body"></div>
+    <div class="dlg-foot">
+      <label><input type="checkbox" id="f-confirmed"> 最新の募集図面で確認済み（「要確認」表示を消す）</label>
+      <div style="display:flex; gap:8px">
+        <button type="button" id="btn-reset">初期値に戻す</button>
+        <button value="cancel">閉じる</button>
+        <button class="primary" id="btn-save" value="save">反映する</button>
+      </div>
+    </div>
+  </form>
+</dialog>
+
+<script>
+(function () {
+  // 初期値：同建物3階1LDKの公開募集事例を参考値として設定（309号室の確定値ではありません）
+  var DEFAULTS = {
+    room: '309', floor: '3', layout: '1LDK', area: '39.00', dir: '南西',
+    rent: 140000, fee: 15000, deposit: 1, keyMoney: 1,
+    moveIn: '相談', moveMonth: 1,
+    agentFee: 1.1, guaranteeRate: 50, insurance: 20000, keyChange: 22000, other: 0,
+    company: '〇〇不動産株式会社', staff: '〇〇 〇〇', tel: '03-XXXX-XXXX',
+    area1: '',
+    date: ''
+  };
+  var FIELDS = [
+    ['room','号室','text'],['floor','階','text'],
+    ['layout','間取り','text'],['area','専有面積（㎡）','text'],
+    ['dir','主要採光面','text'],['moveIn','入居時期','text'],
+    ['rent','賃料（円）','number'],['fee','管理費・共益費（円）','number'],
+    ['deposit','敷金（ヶ月）','number'],['keyMoney','礼金（ヶ月）','number'],
+    ['moveMonth','前家賃（ヶ月）','number'],['agentFee','仲介手数料（ヶ月・税込）','number'],
+    ['guaranteeRate','保証会社初回（総賃料の％）','number'],['insurance','火災保険（円）','number'],
+    ['keyChange','鍵交換費（円）','number'],['other','その他費用（円）','number'],
+    ['company','会社名','text'],['staff','担当者','text'],
+    ['tel','電話番号','text'],['date','提案日（空欄で本日）','text'],
+    ['area1','周辺施設（「、」区切り）','text','full']
+  ];
+  var KEY = 'vogacorte-309-proposal';
+  var data = Object.assign({}, DEFAULTS);
+  var confirmed = false;
+  try {
+    var saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (saved) { Object.assign(data, saved.data || {}); confirmed = !!saved.confirmed; }
+  } catch (e) {}
+
+  var yen = function (n) { return Math.round(n).toLocaleString('ja-JP'); };
+  var monthsTxt = function (m) { return Number(m) > 0 ? m + 'ヶ月' : 'なし'; };
+
+  function today() {
+    var d = new Date();
+    return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日';
+  }
+
+  function render() {
+    var rent = Number(data.rent) || 0, fee = Number(data.fee) || 0;
+    var v = {
+      room: data.room, floor: data.floor, layout: data.layout, area: data.area, dir: data.dir,
+      moveIn: data.moveIn, company: data.company, staff: data.staff, tel: data.tel,
+      rentYen: yen(rent), feeYen: yen(fee),
+      rentMan: (rent / 10000).toLocaleString('ja-JP', { maximumFractionDigits: 2 }),
+      depositTxt: '敷金 ' + monthsTxt(data.deposit), keyTxt: '礼金 ' + monthsTxt(data.keyMoney),
+      moveMonth: data.moveMonth, date: data.date || today()
+    };
+    document.querySelectorAll('[data-f]').forEach(function (el) {
+      var k = el.getAttribute('data-f');
+      el.textContent = v[k] != null ? v[k] : '';
+    });
+
+    var init = [
+      ['敷金（' + monthsTxt(data.deposit) + '）', rent * data.deposit],
+      ['礼金（' + monthsTxt(data.keyMoney) + '）', rent * data.keyMoney],
+      ['前家賃（' + data.moveMonth + 'ヶ月分・管理費含む）', (rent + fee) * data.moveMonth],
+      ['仲介手数料（' + data.agentFee + 'ヶ月・税込）', rent * data.agentFee],
+      ['保証会社初回保証料（総賃料の' + data.guaranteeRate + '%）', (rent + fee) * data.guaranteeRate / 100],
+      ['火災保険料（2年）', Number(data.insurance)],
+      ['鍵交換費用', Number(data.keyChange)]
+    ];
+    if (Number(data.other) > 0) init.push(['その他費用', Number(data.other)]);
+    var total = 0;
+    document.getElementById('init-table').innerHTML = init.map(function (r) {
+      total += r[1];
+      return '<tr><td>' + r[0] + '</td><td>' + yen(r[1]) + '円</td></tr>';
+    }).join('');
+    document.getElementById('init-total').textContent = '約' + yen(total) + '円';
+
+    document.getElementById('month-table').innerHTML =
+      '<tr><td>賃料</td><td>' + yen(rent) + '円</td></tr>' +
+      '<tr><td>管理費・共益費</td><td>' + yen(fee) + '円</td></tr>';
+    document.getElementById('month-total').textContent = yen(rent + fee) + '円';
+    document.getElementById('year-total').textContent = yen((rent + fee) * 12) + '円';
+
+    var list = (data.area1 || '').split(/[、,]/).map(function (s) { return s.trim(); }).filter(Boolean);
+    document.getElementById('area-list').textContent = list.length ? list.join(' ／ ') : '—';
+
+    document.body.classList.toggle('confirmed', confirmed);
+  }
+
+  var body = document.getElementById('dlg-body');
+  body.innerHTML = FIELDS.map(function (f) {
+    return '<label class="' + (f[3] || '') + '">' + f[1] +
+      '<input id="in-' + f[0] + '" type="' + f[2] + '"' + (f[2] === 'number' ? ' step="any"' : '') + '></label>';
+  }).join('');
+
+  function fillForm() {
+    FIELDS.forEach(function (f) { document.getElementById('in-' + f[0]).value = data[f[0]]; });
+    document.getElementById('f-confirmed').checked = confirmed;
+  }
+
+  var dlg = document.getElementById('editor');
+  document.getElementById('btn-edit').onclick = function () { fillForm(); dlg.showModal(); };
+  document.getElementById('btn-save').onclick = function () {
+    FIELDS.forEach(function (f) {
+      var val = document.getElementById('in-' + f[0]).value;
+      data[f[0]] = f[2] === 'number' ? (Number(val) || 0) : val;
+    });
+    confirmed = document.getElementById('f-confirmed').checked;
+    try { localStorage.setItem(KEY, JSON.stringify({ data: data, confirmed: confirmed })); } catch (e) {}
+    render();
+  };
+  document.getElementById('btn-reset').onclick = function () {
+    data = Object.assign({}, DEFAULTS); confirmed = false;
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    fillForm(); render();
+  };
+  document.getElementById('btn-theme').onclick = function () {
+    var root = document.documentElement;
+    var dark = root.getAttribute('data-theme') === 'dark' ||
+      (!root.getAttribute('data-theme') && matchMedia('(prefers-color-scheme: dark)').matches);
+    root.setAttribute('data-theme', dark ? 'light' : 'dark');
+  };
+
+  render();
+})();
+</script>
+</body>
+</html>
