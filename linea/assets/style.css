@@ -373,6 +373,7 @@ section{position:relative}
 .gallery .ph{background:linear-gradient(160deg,#3a3734,#2a2826 60%,#4a4440)}
 .gallery .ph::after{color:rgba(255,255,255,.35)}
 @keyframes rail{to{transform:translateX(-50%)}}
+.gallery__note{margin-top:48px;font-size:11px;letter-spacing:.14em;color:#9b958f}
 
 /* =========================================================
    Flow
