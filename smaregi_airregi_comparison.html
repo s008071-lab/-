@@ -152,6 +152,7 @@ ol.notes{margin:0;padding-left:1.4em;font-size:11.5px;color:var(--ink2)} ol.note
   .sim{grid-template-columns:1fr;gap:6px}
   .sim>div:first-child{display:none}
   .chart svg{max-height:92px;width:auto;margin:0 auto}
+  #p8 .curband{padding:3px 10px} #p8 .curband .c b{font-size:12px}
   #p8 .res-cards{margin-bottom:4px} #p8 .res{padding:4px 8px}
   .compact th,.compact td{padding:2px 6px}
   .est td,.est th{padding:1px 6px;font-size:9.2px;line-height:1.35}
@@ -202,7 +203,10 @@ td.rec{background:#f2f6ff}
 .flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:6px 0 10px}
 .flow div{background:var(--bg);border-radius:8px;padding:8px 10px;font-size:11.5px}
 .flow b{display:block;font-size:12.5px;color:var(--s);margin-bottom:2px}
-@media (max-width:860px){.hero,.cg,.ladder,.flow,.kpis.three{grid-template-columns:1fr}}
+.curband{display:grid;grid-template-columns:1.1fr repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 2px;border:2px solid var(--good);border-radius:10px;padding:8px 12px;background:var(--good-soft);align-items:center}
+.curband .t{font-weight:700;font-size:12.5px;color:var(--good)} .curband .t small{display:block;font-weight:400;color:var(--ink2);font-size:10.5px}
+.curband .c{font-size:11px;color:var(--ink2)} .curband .c b{display:block;font-size:16px;color:var(--good)}
+@media (max-width:860px){.curband{grid-template-columns:1fr 1fr}.hero,.cg,.ladder,.flow,.kpis.three{grid-template-columns:1fr}}
 @media print{
   .hero{gap:10px}
   .reco{padding:8px 12px} .reco .plan{font-size:19px}
@@ -214,6 +218,8 @@ td.rec{background:#f2f6ff}
   #p1 .kpi .diff{margin-top:2px;padding-top:2px} #p1 h3{margin:6px 0 4px}
   #p1 .sumtbl td,#p1 .sumtbl th{padding:0 6px;font-size:9px;line-height:1.3}
   #p1 .callout{margin-top:4px!important;padding:4px 10px;font-size:10px}
+  #p1 #beCallout{display:none}
+  #p1 .curband{padding:4px 10px;margin:6px 0 0} #p1 .curband .c b{font-size:13px} #p1 .reco li{margin:1px 0}
   #p6 td,#p6 th{padding:1px 6px;font-size:9.2px}
 }
 </style>
@@ -238,11 +244,11 @@ td.rec{background:#f2f6ff}
       <div class="lbl">推奨プラン</div>
       <div class="plan">スマレジ プレミアムプラス<small>月額8,800円（税込）／1日あたり約293円</small></div>
       <ul>
+        <li><b>今の旧プラン（11,000円）より月2,200円安くなり</b>、今のiPad・プリンターをそのまま使えるので<b>機器代は0円</b></li>
         <li><b>原価を入力するだけ</b>で、原価率と粗利が自動で計算される（商品別・月次のPL）</li>
         <li><b>顧客管理10万件・ポイント・クーポン</b>で、リピーターを増やす仕組みがそろう</li>
         <li><b>365日のコールセンター</b>につながる（無料・低価格のプランはメールのみ）</li>
-        <li>セルフレジ・自動釣銭機・AIレポートにも対応し、<b>オフラインでも販売できる</b></li>
-        <li>PAYGATEの手数料は<b>2.90%〜（条件を満たせば1.98%）</b>。手数料の差で月額を取り戻せる</li>
+                <li>PAYGATEの手数料は<b>2.90%〜（条件を満たせば1.98%）</b>。手数料の差で月額を取り戻せる</li>
       </ul>
     </div>
     <div class="cond">
@@ -251,12 +257,13 @@ td.rec{background:#f2f6ff}
     </div>
   </div>
 
+  <div class="curband" id="curBand"></div>
   <h3>モデル店舗の試算（比較相手：エアレジ＝Airレジ）</h3>
   <div class="kpis">
     <div class="kpi"><div class="k">① 初期費用</div>
       <div class="row"><span class="c-s">スマレジ</span><span class="v num c-s" id="k_init_s"></span></div>
       <div class="row"><span class="c-a">エアレジ</span><span class="v num c-a" id="k_init_a"></span></div>
-      <div class="diff" id="k_init_d"></div><div class="f">＝レジ周り機器＋決済端末＋導入サポート</div></div>
+      <div class="diff" id="k_init_d"></div><div class="f">＝レジ周り機器＋決済端末＋導入サポート（スマレジは今の機器を使うので機器代0円）</div></div>
     <div class="kpi"><div class="k">② 月額（固定費）</div>
       <div class="row"><span class="c-s">スマレジ</span><span class="v num c-s" id="k_mon_s"></span></div>
       <div class="row"><span class="c-a">エアレジ</span><span class="v num c-a" id="k_mon_a"></span></div>
@@ -280,11 +287,14 @@ td.rec{background:#f2f6ff}
 <!-- ======================= P2 前提 ======================= -->
 <section class="page" id="p2">
   <div class="pg-head"><h2>比較の前提：ハンディを使わない飲食店の構成</h2><span class="no">2 / 9</span></div>
-  <p class="lead">注文は口頭・手書き伝票で受け、会計をPOSレジで行う店舗（テイクアウト・モバイルオーダーなし）を想定しています。</p>
+  <p class="lead">現在スマレジの旧プラン（11,000円/月）を使っている店舗が、①スマレジ プレミアムプラスに変更する場合と、②エアレジに乗り換える場合を比べます。注文は口頭・手書き伝票、テイクアウト・モバイルオーダーなしの想定です。</p>
   <div class="tbl-wrap"><table>
     <thead><tr><th style="width:18%">役割</th><th class="s-col" style="width:41%">スマレジ（推奨：プレミアムプラス）</th><th class="a-col">エアレジ</th></tr></thead>
     <tbody>
-      <tr><th>POSレジ</th><td>スマレジ プレミアムプラス <b>8,800円/月</b></td><td>Airレジ <b>0円</b></td></tr>
+      <tr class="hl"><th>現在の状況</th><td><b>スマレジ 旧プラン 11,000円/月を利用中</b><br><span class="note">iPad・プリンター・ドロアなどの機器はそろっている</span></td><td>未導入（乗り換えになる）</td></tr>
+      <tr><th>POSレジ</th><td>スマレジ プレミアムプラス <b>8,800円/月</b>（プラン変更だけ）</td><td>Airレジ <b>0円</b></td></tr>
+      <tr><th>機器</th><td><b>今の機器をそのまま使う（0円）</b></td><td>新しく用意（Airレジ スターターパック 128,200円）<br><span class="note">今のiPadや対応機種のプリンターなら流用できる場合あり（見積で切り替え可）</span></td></tr>
+      <tr><th>移行作業</th><td>なし（商品・原価・顧客・売上データをそのまま引き継ぐ）</td><td>商品マスタの再登録、スタッフの操作研修、過去の売上データは引き継げない</td></tr>
       <tr><th>原価・粗利の管理</th><td>商品ごとに原価を登録すると粗利・粗利率が自動で計算される。PL管理で月の原価率・売上総利益も出せる</td><td>提供資料に記載なし</td></tr>
       <tr><th>顧客管理・販促</th><td>顧客10万件・ポイント・クーポン（プランに含まれる）</td><td>提供資料に記載なし（CRMはAirレジ オーダーのモバイルオーダーが前提）</td></tr>
       <tr><th>予約管理</th><td>予約管理アプリ（アプリマーケット・有料）</td><td>レストランボード（基本機能0円）</td></tr>
@@ -343,6 +353,7 @@ td.rec{background:#f2f6ff}
     <thead><tr><th style="width:24%">項目</th><th class="s-col">スマレジ プレミアムプラス</th><th class="a-col">エアレジ（Airレジ）</th><th style="width:24%">ポイント</th></tr></thead>
     <tbody>
       <tr class="grp"><th colspan="4">月額費用</th></tr>
+      <tr><th>現在の利用料（参考）</th><td class="r num">旧プラン 11,000円 → <b>8,800円（−2,200円）</b></td><td class="r">—</td><td>スマレジ内のプラン変更で月2,200円安くなる</td></tr>
       <tr class="hl"><th>POSレジ利用料</th><td class="r price num">8,800円</td><td class="r price num">0円</td><td>固定費はエアレジが安い</td></tr>
       <tr><th>決済サービスの月額</th><td class="r num">PAYGATE 3,300円 <span class="tag web">Web</span><span class="note">有料プランの契約者向けに月額0円のプランもある（手数料は別体系）</span></td><td class="r num">Airペイ 0円 <span class="tag web">Web</span></td><td>—</td></tr>
       <tr class="grp"><th colspan="4">決済手数料</th></tr>
@@ -350,7 +361,7 @@ td.rec{background:#f2f6ff}
       <tr><th>QRコード決済</th><td class="r num"><b>2.00%</b> <span class="tag web">Web</span></td><td class="r num">3.24%（COIN+は1.08%） <span class="tag web">Web</span></td><td><b class="c-s">スマレジが1.24ポイント低い</b></td></tr>
       <tr><th>電子マネー</th><td class="r num">3.24% <span class="tag web">Web</span></td><td class="r num">3.24% <span class="tag web">Web</span></td><td>同じ</td></tr>
       <tr class="grp"><th colspan="4">初期費用</th></tr>
-      <tr><th>レジ周り機器</th><td class="r num">135,360円<span class="note">iPad 58,800／レシートプリンター 51,700／ドロア 17,820／スタンド 7,040 <span class="tag web">Web</span></span></td><td class="r num">128,200円<span class="note">Airレジ スターターパック（ビックカメラ） <span class="tag pdf">PDF</span></span></td><td>ほぼ同じ</td></tr>
+      <tr class="hl"><th>レジ周り機器</th><td class="r price num">0円<span class="note">今のiPad・プリンター・ドロアをそのまま使う（新しく買う場合は135,360円）</span></td><td class="r num">128,200円<span class="note">Airレジ スターターパック（ビックカメラ） <span class="tag pdf">PDF</span></span></td><td><b class="c-s">スマレジは機器代がかからない</b></td></tr>
       <tr><th>決済端末</th><td class="r num">PAYGATE 39,600円<span class="note">数量限定で0円のキャンペーンあり</span></td><td class="r num">カードリーダー 0円<span class="note">条件付きの無償貸与</span></td><td>—</td></tr>
       <tr><th>導入サポート（任意）</th><td class="r num">セットアップ 44,000円／トレーニング 44,000円</td><td class="r">提供資料に記載なし</td><td>スマレジは訪問サポートを選べる</td></tr>
     </tbody>
@@ -434,6 +445,9 @@ td.rec{background:#f2f6ff}
         <h4>① 店舗の条件</h4>
         <div class="field"><label for="i_stores">店舗数</label><input type="number" id="i_stores" min="1" value="1"></div>
         <div class="field"><label for="i_regi">レジ台数（1店舗あたり）</label><input type="number" id="i_regi" min="1" value="1"></div>
+        <div class="field"><label for="i_cur">今のスマレジ月額（旧プラン）</label><input type="number" id="i_cur" min="0" value="11000"></div>
+        <div class="field"><label for="i_sown">スマレジの機器</label><select id="i_sown"><option value="1">今の機器を使う（0円）</option><option value="0">新しく買う</option></select></div>
+        <div class="field"><label for="i_aown">エアレジ乗り換え時の機器</label><select id="i_aown"><option value="0">新しく買う</option><option value="1">今の機器を流用（対応機種の場合）</option></select></div>
         <div class="field"><label for="i_handy">ハンディ台数（使わない場合は0）</label><input type="number" id="i_handy" min="0" value="0"></div>
         <div class="field"><label for="i_kitchen">キッチンプリンター台数</label><input type="number" id="i_kitchen" min="0" value="0"></div>
       </div>
@@ -464,6 +478,7 @@ td.rec{background:#f2f6ff}
 
     <div>
       <div class="cond-print src" id="condPrint"></div>
+      <div class="curband" id="curBand8" style="margin:0 0 8px"></div>
       <div class="res-cards">
         <div class="res"><div class="k">初期費用</div><div class="l"><span class="c-s">スマレジ</span><b class="num c-s" id="r_init_s"></b></div><div class="l"><span class="c-a">エアレジ</span><b class="num c-a" id="r_init_a"></b></div><div class="d" id="r_init_d"></div></div>
         <div class="res"><div class="k">月額合計</div><div class="l"><span class="c-s">スマレジ</span><b class="num c-s" id="r_mon_s"></b></div><div class="l"><span class="c-a">エアレジ</span><b class="num c-a" id="r_mon_a"></b></div><div class="d" id="r_mon_d"></div></div>
@@ -488,6 +503,7 @@ td.rec{background:#f2f6ff}
   <div class="two">
     <div class="fitbox" style="border-color:var(--s)"><h4 class="c-s">スマレジ プレミアムプラスを推奨する理由</h4>
       <ul>
+        <li><b>乗り換え不要</b>：プラン変更だけで月2,200円（年26,400円）安くなり、機器代・移行作業もかからない</li>
         <li><b>原価管理</b>：原価を登録するだけで、粗利・粗利率・原価率が自動で計算される</li>
         <li><b>リピーター施策</b>：顧客管理10万件・ポイント・クーポンがプランに含まれる</li>
         <li><b>電話サポート</b>：365日のコールセンターと、全国の保守網がある</li>
@@ -497,7 +513,7 @@ td.rec{background:#f2f6ff}
       </ul></div>
     <div class="fitbox" style="border-color:var(--a)"><h4 class="c-a">エアレジが有利な点（反論への備え）</h4>
       <ul>
-        <li>レジの月額が0円で、固定費が安い → <span class="c-s">キャッシュレス売上が大きい店舗なら、手数料の差で取り戻せる（P4）</span></li>
+        <li>レジの月額が0円で、固定費が安い → <span class="c-s">乗り換えには機器代（約13万円）と商品の再登録・研修がかかる。また、キャッシュレス売上が大きい店舗なら、手数料の差で取り戻せる（P4）</span></li>
         <li>予約台帳（レストランボード）が0円 → <span class="c-s">予約が少ない店舗なら必要性は低い</span></li>
         <li>Airペイに2.48%のプログラムがある → <span class="c-s">条件付き。PAYGATEにも1.98%のプランがある</span></li>
       </ul></div>
@@ -598,7 +614,8 @@ function calc(){
       kit=Math.max(0,num(val("i_kitchen"))), splan=val("i_splan"), ssetup=val("i_ssetup")==="1", strain=Math.max(0,num(val("i_strain"))),
       sanshin=num(val("i_sanshin")), aplan=val("i_aplan"),
       useFee=document.getElementById("i_fee").checked, sales=num(val("i_sales")), cash=Math.min(100,Math.max(0,num(val("i_cash"))))/100,
-      srate=num(val("i_srate"))/100, arate=num(val("i_arate"))/100, pgterm=num(val("i_pgterm"));
+      srate=num(val("i_srate"))/100, arate=num(val("i_arate"))/100, pgterm=num(val("i_pgterm")),
+      cur=num(val("i_cur")), sown=val("i_sown")==="1", aown=val("i_aown")==="1";
   var sOrder = splan==="food", aOrder = aplan!=="regi";
   var w=document.getElementById("w_splan"), msg=[];
   if((handy>0||kit>0)&&!sOrder) msg.push("ハンディ・キッチンプリンターを使うには、スマレジはフードビジネスが必要です（「"+PLAN_NAME[splan]+"」では計算から外しています）。");
@@ -612,8 +629,8 @@ function calc(){
   if(aOrder){A.push(["m","Airレジ オーダー",0,U.a_order*st,yen(U.a_order)+"×"+st+"店","order"]);
     var aa=Math.max(0,handy-U.a_handyInc); if(handy>0)A.push(["m","ハンディ追加分",0,aa*U.a_handyAdd*st,aa+"台×"+yen(U.a_handyAdd)+"×"+st+"店（"+U.a_handyInc+"台まで込み）","handy"]);}
   if(sanshin) S.push(["m","ネットあんしんBOX",U.s_anshinInit*st,sanshin*st,"月額 "+yen(sanshin)+"×"+st+"店／初期 "+yen(U.s_anshinInit),"anshin"]);
-  S.push(["i","レジ周り機器",U.s_regiSet*regi*st,0,yen(U.s_regiSet)+"×"+regi+"台×"+st+"店","regi"]);
-  A.push(["i","レジ周り機器",U.a_regiSet*regi*st,0,yen(U.a_regiSet)+"×"+regi+"台×"+st+"店","regi"]);
+  S.push(["i","レジ周り機器",sown?0:U.s_regiSet*regi*st,0,sown?"今の機器を使う（0円）":yen(U.s_regiSet)+"×"+regi+"台×"+st+"店","regi"]);
+  A.push(["i","レジ周り機器",aown?0:U.a_regiSet*regi*st,0,aown?"今の機器を流用（0円）":yen(U.a_regiSet)+"×"+regi+"台×"+st+"店","regi"]);
   if(sOrder&&handy>0) S.push(["i","ハンディ端末",U.s_handyDev*handy*st,0,yen(U.s_handyDev)+"×"+handy+"台×"+st+"店","hdev"]);
   if(aOrder&&handy>0) A.push(["i","ハンディ端末",U.a_handyDev*handy*st,0,yen(U.a_handyDev)+"×"+handy+"台×"+st+"店","hdev"]);
   if(sOrder&&kit>0) S.push(["i","キッチンプリンター",U.s_kPrinter*kit*st,0,yen(U.s_kPrinter)+"×"+kit+"台×"+st+"店","kit"]);
@@ -666,7 +683,9 @@ function calc(){
   set("k_3y_s",yen(y3s));set("k_3y_a",yen(y3a));set("k_3y_d",diffText(y3s,y3a));
 
   // 計算条件の表
-  var c=[["店舗数・レジ台数",st+"店舗・レジ"+regi+"台／店"],
+  var c=[["現在の契約","スマレジ 旧プラン "+yen(cur)+"/月（機器はそろっている）"],
+    ["店舗数・レジ台数",st+"店舗・レジ"+regi+"台／店"],
+    ["機器","スマレジ："+(sown?"今の機器を使う":"新しく買う")+"／エアレジ："+(aown?"今の機器を流用":"新しく買う")],
     ["プラン","スマレジ "+PLAN_NAME[splan]+"　×　エアレジ "+APLAN_NAME[aplan]],
     ["ハンディ・キッチン",(handy||kit)?("ハンディ"+handy+"台・キッチン"+kit+"台"):"使わない（0台）"],
     ["スマレジ導入サポート",(ssetup?"セットアップあり":"セットアップなし")+"・トレーニング"+strain+"回"],
@@ -687,6 +706,14 @@ function calc(){
   document.getElementById("beTbl").innerHTML=[["2.90%（標準）",0.029],["2.00%（QR決済）",0.02],["1.98%（中小・Visa/Master）",0.0198]].map(function(r){
     var d=0.0324-r[1];return '<tr><th>'+r[0]+'</th><td class="r num">'+(d*100).toFixed(2)+'ポイント</td><td class="r num"><b>月 '+man(fx/d)+'</b></td><td>キャッシュレス売上が月'+man(fx/d)+'を超えると、スマレジの方が安い</td></tr>';}).join("");
 
+  // 現状（旧プラン）との差
+  var nowP=U["s_"+splan], dm=(cur-nowP)*st, sInit=si;
+  var band=document.getElementById("curBand");
+  band.innerHTML='<div class="t">今のスマレジ（旧プラン '+yen(cur)+'）から<br>'+PLAN_NAME[splan]+'（'+yen(nowP)+'）に変更すると<small>プラン変更だけ・機器は今のものを使う・データもそのまま</small></div>'+
+    '<div class="c">月額の差<b>'+(dm>=0?"−":"＋")+yen(Math.abs(dm))+'</b></div>'+
+    '<div class="c">1年間で<b>'+(dm>=0?"−":"＋")+yen(Math.abs(dm*12))+'</b></div>'+
+    '<div class="c">3年間で<b>'+(dm>=0?"−":"＋")+yen(Math.abs(dm*36))+'</b></div>';
+  var b8=document.getElementById("curBand8"); if(b8) b8.innerHTML=band.innerHTML;
   drawChart(si,sm,ai,am);
   save();
 }
@@ -735,9 +762,9 @@ function delCost(i){COST.splice(i,1);renderCost();}
 document.getElementById("costBody").addEventListener("input",function(e){var i=e.target.dataset.i,c=e.target.dataset.c;if(i==null)return;COST[i][c]=c==="0"?e.target.value:num(e.target.value);calcCost();});
 
 /* ---------- 保存・初期化 ---------- */
-var IDS=["i_stores","i_regi","i_handy","i_kitchen","i_splan","i_ssetup","i_strain","i_sanshin","i_aplan","i_sales","i_cash","i_srate","i_arate","i_pgterm"];
+var IDS=["i_stores","i_regi","i_cur","i_sown","i_aown","i_handy","i_kitchen","i_splan","i_ssetup","i_strain","i_sanshin","i_aplan","i_sales","i_cash","i_srate","i_arate","i_pgterm"];
 var INIT={}; IDS.forEach(function(id){INIT[id]=document.getElementById(id).value;});
-var KEY="cmpSimV2";
+var KEY="cmpSimV3";
 function save(){try{var o={u:U,f:document.getElementById("i_fee").checked};IDS.forEach(function(id){o[id]=val(id);});localStorage.setItem(KEY,JSON.stringify(o));}catch(e){}}
 function load(){try{var o=JSON.parse(localStorage.getItem(KEY)||"null");if(o){
   IDS.forEach(function(id){if(o[id]!=null)document.getElementById(id).value=o[id];});
