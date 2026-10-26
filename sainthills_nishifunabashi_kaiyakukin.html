@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>セントヒルズ西船橋 解約金案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --surface: #ffffff;
+    --text: #1d2433;
+    --muted: #5b6475;
+    --border: #e1e4ea;
+    --a: #1f4e8c;
+    --a-soft: #e8f0fb;
+    --b: #2f7a5c;
+    --b-soft: #e6f4ee;
+    --accent: #b7791f;
+    --accent-soft: #fdf3e2;
+    --shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 4px 16px rgba(16, 24, 40, .06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12151b;
+      --surface: #1b2029;
+      --text: #e7eaf0;
+      --muted: #9aa3b2;
+      --border: #2c3340;
+      --a: #7fb0f0;
+      --a-soft: #1c2a40;
+      --b: #6fcfa4;
+      --b-soft: #17302a;
+      --accent: #e7b45a;
+      --accent-soft: #33291a;
+      --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12151b;
+    --surface: #1b2029;
+    --text: #e7eaf0;
+    --muted: #9aa3b2;
+    --border: #2c3340;
+    --a: #7fb0f0;
+    --a-soft: #1c2a40;
+    --b: #6fcfa4;
+    --b-soft: #17302a;
+    --accent: #e7b45a;
+    --accent-soft: #33291a;
+    --shadow: none;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 40px 16px 64px; }
+
+  header { margin-bottom: 32px; }
+  .eyebrow { font-size: 13px; letter-spacing: .12em; color: var(--muted); font-weight: 500; }
+  h1 { font-size: clamp(24px, 4vw, 32px); margin: 4px 0 8px; font-weight: 900; line-height: 1.4; }
+  .lead { color: var(--muted); margin: 0; }
+
+  .base {
+    display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: baseline;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px 20px; margin-bottom: 28px; box-shadow: var(--shadow);
+  }
+  .base .label { color: var(--muted); font-size: 14px; }
+  .base .value { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .base .note { color: var(--muted); font-size: 12px; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 24px; box-shadow: var(--shadow); position: relative; display: flex; flex-direction: column;
+  }
+  .card.a { border-top: 5px solid var(--a); }
+  .card.b { border-top: 5px solid var(--b); }
+  .tagrow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .pattern { font-weight: 900; font-size: 15px; }
+  .card.a .pattern { color: var(--a); }
+  .card.b .pattern { color: var(--b); }
+  .badge { font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 999px; }
+  .card.a .badge { background: var(--a-soft); color: var(--a); }
+  .card.b .badge { background: var(--b-soft); color: var(--b); }
+  .card h2 { font-size: 20px; margin: 8px 0 4px; line-height: 1.5; }
+  .amount { margin: 12px 0 4px; font-variant-numeric: tabular-nums; }
+  .amount .num { font-size: clamp(34px, 6vw, 42px); font-weight: 900; letter-spacing: -.01em; }
+  .amount .yen { font-size: 18px; font-weight: 700; margin-left: 4px; }
+  .tax { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+  .calc {
+    font-size: 13px; color: var(--muted); background: var(--bg); border-radius: 8px;
+    padding: 6px 12px; display: inline-block; margin-bottom: 16px; font-variant-numeric: tabular-nums;
+  }
+  .card h3 { font-size: 14px; margin: 8px 0 6px; color: var(--muted); letter-spacing: .05em; }
+  .card p { margin: 0 0 12px; font-size: 15px; }
+  .card ul { margin: 0; padding-left: 1.2em; font-size: 15px; }
+  .card li { margin-bottom: 4px; }
+
+  section { margin-top: 40px; }
+  section > h2 { font-size: 20px; margin: 0 0 16px; padding-left: 12px; border-left: 4px solid var(--text); line-height: 1.4; }
+
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; box-shadow: var(--shadow); }
+
+  /* bar comparison */
+  .bars { display: grid; gap: 14px; }
+  .bar-row { display: grid; grid-template-columns: 110px 1fr; align-items: center; gap: 12px; }
+  .bar-label { font-size: 14px; font-weight: 700; }
+  .bar-track { background: var(--bg); border-radius: 8px; height: 36px; overflow: hidden; }
+  .bar-fill {
+    height: 100%; border-radius: 8px; display: flex; align-items: center; justify-content: flex-end;
+    padding-right: 12px; color: #fff; font-weight: 700; font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .bar-fill.a { background: var(--a); width: 100%; }
+  .bar-fill.b { background: var(--b); width: 50%; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .bar-fill { color: #10141a; } }
+  :root[data-theme="dark"] .bar-fill { color: #10141a; }
+  .diff { margin-top: 16px; font-size: 14px; color: var(--muted); }
+  .diff strong { color: var(--text); font-variant-numeric: tabular-nums; }
+
+  /* table */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 520px; }
+  th, td { padding: 12px 14px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+  thead th { font-size: 13px; color: var(--muted); font-weight: 700; }
+  thead th.a { color: var(--a); }
+  thead th.b { color: var(--b); }
+  tbody th { font-weight: 700; white-space: nowrap; color: var(--muted); font-size: 14px; }
+  td.num { font-variant-numeric: tabular-nums; font-weight: 700; }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
+
+  /* flow */
+  .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; counter-reset: step; }
+  .step { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .step::before {
+    counter-increment: step; content: "STEP " counter(step);
+    display: block; font-size: 12px; font-weight: 900; letter-spacing: .1em; color: var(--accent); margin-bottom: 4px;
+  }
+  .step strong { display: block; font-size: 16px; margin-bottom: 4px; }
+  .step span { font-size: 14px; color: var(--muted); }
+
+  .notice {
+    margin-top: 40px; background: var(--accent-soft); border-radius: 12px; padding: 16px 20px; font-size: 13px; color: var(--muted);
+  }
+  .notice strong { color: var(--text); }
+  footer { margin-top: 24px; font-size: 12px; color: var(--muted); text-align: right; }
+
+  @media (max-width: 520px) {
+    .wrap { padding-top: 28px; }
+    .card, .panel { padding: 20px 16px; }
+    .bar-row { grid-template-columns: 1fr; gap: 4px; }
+  }
+  @media print {
+    body { background: #fff; }
+    .card, .panel, .step, .base { box-shadow: none; }
+    .wrap { padding: 0; }
+    section, .card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">サブリース契約 中途解約に伴う合意金のご提案</div>
+    <h1>セントヒルズ西船橋　解約金 2パターン比較</h1>
+    <p class="lead">中途解約時の補償額について、標準的な水準（パターンA）と早期解決を優先した譲歩案（パターンB）の2案を整理しました。</p>
+  </header>
+
+  <div class="base">
+    <span class="label">算定基準（月額保証家賃相当）</span>
+    <span class="value">106,200 円 / 月</span>
+    <span class="note">※ 各パターンの請求金額 ÷ 月数より算出</span>
+  </div>
+
+  <div class="cards">
+    <article class="card a">
+      <div class="tagrow">
+        <span class="pattern">パターン A</span>
+        <span class="badge">推奨の落としどころ</span>
+      </div>
+      <h2>12ヶ月分（世間相応）</h2>
+      <div class="amount"><span class="num">1,274,400</span><span class="yen">円</span></div>
+      <div class="tax">非課税／免税扱いの合意金として</div>
+      <div class="calc">106,200 円 × 12ヶ月</div>
+
+      <h3>設定根拠</h3>
+      <p>サブリース契約の途中解約において、業界内で最も一般的かつ合意が得られやすい標準的な水準です。</p>
+      <p>サブリース事業者（貴社）は年単位で運用計画を立てており、解約に伴って次の損失が発生します。これらを補填する「1年分の保証家賃」として算出しています。</p>
+      <ul>
+        <li>将来得られるはずだった1年分の運用益</li>
+        <li>次の案件へ切り替えるための準備期間・営業損失</li>
+      </ul>
+
+      <h3 style="margin-top:16px;">メリット</h3>
+      <p>高すぎず低すぎない金額のため、オーナー側にも「合理的な補償額」として納得してもらいやすい水準です。</p>
+    </article>
+
+    <article class="card b">
+      <div class="tagrow">
+        <span class="pattern">パターン B</span>
+        <span class="badge">早期解決・譲歩案</span>
+      </div>
+      <h2>6ヶ月分（最低限の補償ライン）</h2>
+      <div class="amount"><span class="num">637,200</span><span class="yen">円</span></div>
+      <div class="tax">非課税／免税扱いの合意金として</div>
+      <div class="calc">106,200 円 × 6ヶ月</div>
+
+      <h3>設定根拠</h3>
+      <p>一般的な賃貸借契約・管理契約における「解約予告期間（半年前予告など）」を基準とした最低限の補償ラインです。</p>
+      <p>中途解約には「6ヶ月前の事前通知」を必要とする契約が多く、その事後承諾（即時解約）の対価として「6ヶ月分の家賃相当額」を求める考え方に基づきます。</p>
+
+      <h3 style="margin-top:16px;">適した場面</h3>
+      <ul>
+        <li>オーナーとの良好な関係を保ちたい</li>
+        <li>早期に手続きを完了させたい</li>
+        <li>最初は12ヶ月で提示し、交渉の着地点（歩み寄り）として使う</li>
+      </ul>
+    </article>
+  </div>
+
+  <section>
+    <h2>金額の比較</h2>
+    <div class="panel">
+      <div class="bars">
+        <div class="bar-row">
+          <div class="bar-label">A：12ヶ月分</div>
+          <div class="bar-track"><div class="bar-fill a">1,274,400 円</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">B：6ヶ月分</div>
+          <div class="bar-track"><div class="bar-fill b">637,200 円</div></div>
+        </div>
+      </div>
+      <p class="diff">差額：<strong>637,200 円</strong>（パターンBはパターンAの半額）</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>比較一覧</h2>
+    <div class="panel table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th class="a">パターン A（12ヶ月分）</th>
+            <th class="b">パターン B（6ヶ月分）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th>請求金額</th><td class="num">1,274,400 円</td><td class="num">637,200 円</td></tr>
+          <tr><th>位置づけ</th><td>世間相応・推奨の落としどころ</td><td>早期解決・譲歩案</td></tr>
+          <tr><th>考え方</th><td>1年分の保証家賃（運用益・切替期間の損失補填）</td><td>6ヶ月前予告の事後承諾（即時解約）の対価</td></tr>
+          <tr><th>合意の得やすさ</th><td>業界標準で合理的と受け止められやすい</td><td>最低限ラインのため受け入れられやすい</td></tr>
+          <tr><th>向いている場面</th><td>通常の交渉・初回提示</td><td>関係維持・早期完了・交渉の着地点</td></tr>
+          <tr><th>税務上の扱い</th><td colspan="2">いずれも非課税／免税扱いの合意金として</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>交渉の進め方（例）</h2>
+    <div class="flow">
+      <div class="step"><strong>パターンAで提示</strong><span>12ヶ月分 1,274,400円を標準的な補償額として提示</span></div>
+      <div class="step"><strong>オーナーの反応を確認</strong><span>合意できればそのまま手続きへ</span></div>
+      <div class="step"><strong>必要に応じて歩み寄り</strong><span>パターンB 637,200円を着地点として提示し早期解決を図る</span></div>
+    </div>
+  </section>
+
+  <div class="notice">
+    <strong>ご留意事項：</strong>本資料は交渉用の試算・提案です。最終的な金額および税務上の取扱いは、契約書の解約条項の内容と当事者間の合意、必要に応じて税理士等の専門家の確認に基づいて決定してください。
+  </div>
+
+  <footer>セントヒルズ西船橋　解約金案</footer>
+</div>
+</body>
+</html>
