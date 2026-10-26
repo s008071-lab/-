@@ -148,9 +148,11 @@
   .step span { font-size: 14px; color: var(--muted); }
 
   .notice {
-    margin-top: 40px; background: var(--accent-soft); border-radius: 12px; padding: 16px 20px; font-size: 13px; color: var(--muted);
+    margin-top: 40px; background: var(--accent-soft); border-left: 6px solid var(--accent); border-radius: 12px;
+    padding: 24px 28px; font-size: clamp(18px, 2.6vw, 22px); font-weight: 700; line-height: 1.9; color: var(--text);
   }
-  .notice strong { color: var(--text); }
+  .notice strong { display: block; font-size: 15px; letter-spacing: .1em; color: var(--accent); margin-bottom: 6px; }
+  @media (max-width: 520px) { .notice { padding: 20px 18px; } }
   footer { margin-top: 24px; font-size: 12px; color: var(--muted); text-align: right; }
 
   @media (max-width: 520px) {
@@ -272,7 +274,7 @@
   </section>
 
   <div class="notice">
-    <strong>まとめ：</strong>まずはパターンA（12ヶ月分）でご提示し、交渉の状況に応じて、最終的にはパターンB（6ヶ月分）での合意を目指すという進め方はいかがでしょうか。
+    <strong>まとめ</strong>まずはパターンA（12ヶ月分）でご提示し、交渉の状況に応じて、最終的にはパターンB（6ヶ月分）での合意を目指すという進め方はいかがでしょうか。
   </div>
 
   <footer>セントヒルズ西船橋　解約金案</footer>
