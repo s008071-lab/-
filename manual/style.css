@@ -23,7 +23,7 @@ body{margin:0;background:var(--bg);color:var(--text);
   line-height:1.8;font-size:16px;-webkit-text-size-adjust:100%}
 a{color:var(--accent-text)}
 /* ---------- header / nav ---------- */
-.site-header{position:sticky;top:0;z-index:10;background:var(--ink);color:var(--ink-text);
+.site-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--ink);color:var(--ink-text);
   border-bottom:3px solid var(--accent)}
 .site-header .inner{max-width:960px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .brand{font-weight:700;letter-spacing:.05em;color:var(--ink-text);text-decoration:none;display:flex;align-items:center;gap:8px;white-space:nowrap}

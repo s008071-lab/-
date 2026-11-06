@@ -204,8 +204,11 @@
     try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}
   }
   boxes.forEach(function(b,i){b.checked=!!saved[i];b.addEventListener('change',update)});
-  document.getElementById('reset').addEventListener('click',function(){
-    if(confirm('チェックをすべて外しますか？')){boxes.forEach(function(b){b.checked=false});update()}
+  var reset=document.getElementById('reset'),armed=null;
+  reset.addEventListener('click',function(){
+    if(!armed){reset.textContent='もう一度押すとリセット';armed=setTimeout(function(){reset.textContent='リセット';armed=null},3000);return}
+    clearTimeout(armed);armed=null;reset.textContent='リセット';
+    boxes.forEach(function(b){b.checked=false});update();
   });
   update();
 })();
